@@ -1,6 +1,6 @@
 {
   "name": "json-to-avro",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Helper functions to convert JSON objects to Avro according to your schema. And back to JSON.",
   "main": "index.js",
   "directories": {
