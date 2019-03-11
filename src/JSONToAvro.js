@@ -2,146 +2,146 @@
 
 const _ = require('lodash')
 
-const { isValid } = require('./utils')
-
-function checkAvro(schema, avro) {
-  if (!isValid(schema, avro))
-    throw new Error(
-      'The avro that was generated isnt valid according to the schema you passed in!',
-    )
+// const { isValid } = require('./utils')
+const baseTypeConversions = {
+  string: value => {
+    if (typeof value !== 'string') return
+    return value
+  },
+  boolean: value => {
+    if (typeof value !== 'boolean') return
+    return value
+  },
+  long: value => {
+    if (typeof value !== 'number') return
+    return value
+  },
+  int: value => {
+    if (typeof value !== 'number') return
+    return value
+  },
 }
+
+// function checkRecord(schema, record) {
+//   if (!isValid(schema, record))
+//     throw new Error(
+//       'The record that was generated isnt valid according to the avro schema you passed in!',
+//     )
+// }
 
 function JSONToAvro(schema, json) {
-  const res = processRecord(json, schema)
-  const avro = res[schema.name]
-  checkAvro(schema, avro)
-  return avro
+  const processedRecord = processRecord(json, schema)
+  const record = processedRecord[schema.name]
+  return record
 }
 
-function processField(json, { name, doc, type }) {
-  const options = {
-    string: value => {
-      return value
+function processRecord(json, { name, fields }) {
+  const processedRecord = {}
+
+  processedRecord[name] = _.reduce(
+    fields,
+    (m, field) => {
+      const processedField = processField(json[field.name], field)
+      return _.assign(processedField, m)
     },
-    enum: (value, type) => {
-      const obj = {}
-      obj[type.name] = value
-    },
-    boolean: value => {
-      return value
-    },
-    long: value => {
-      return value
-    },
-    int: value => {
-      return value
-    },
+    {},
+  )
+
+  return processedRecord
+}
+
+function processField(json, { name, type }) {
+  const baseTypeConversion = baseTypeConversions[type]
+  const processedField = {}
+
+  if (baseTypeConversion) {
+    const processedBaseType = baseTypeConversion(json, type)
+    if (_.isNil(processedBaseType)) {
+      throw new Error(
+        `Received null as a value for field ${name}, expecting ${type}`,
+      )
+    }
+    processedField[name] = processedBaseType
+    return processedField
   }
 
-  const option = options[type]
-
-  if (option) {
-    const obj = {}
-    obj[name] = options[type](json, type)
-    return obj
-  }
   if (Array.isArray(type)) {
-    const obj = {}
-    obj[name] = processArrayType(json, type)
-    return obj
+    processedField[name] = processArrayType(json, type, name)
+    return processedField
   }
+
   if (typeof type === 'object' && type.type) {
     if (type.type === 'record') {
-      const obj = {}
-      if (type.items) {
-        obj[name] = _.map(type.items, processRecord.bind(json))
-      } else {
-        const rec = processRecord(json, type)
-        obj[name] = rec[type.name]
-      }
-      return obj
+      const processedRecord = processRecord(json, type)
+      processedField[name] = processedRecord[type.name]
+      return processedField
     }
-
     if (type.type === 'array') {
-      const obj = {}
       if (Array.isArray(type.items)) {
-        obj[name] = _.map(json, processUnions.bind(null, type.items))
+        processedField[name] = _.map(json, processUnions.bind(null, type.items))
       } else if (typeof type.items !== 'object') {
-        obj[name] = json
+        processedField[name] = json
       } else {
-        obj[name] = _.map(json, item => {
+        processedField[name] = _.map(json, item => {
           const rec = processRecord(item, type.items)
           return rec[type.items.name]
         })
       }
-
-      return obj
-    }
-
-    if (type.type === 'enum') {
-      const obj = {}
-      obj[name] = json
-      return obj
+      return processedField
     }
   }
-  const obj = {}
-  obj[name] = json
-  return obj
+
+  processedField[name] = json
+  return processedField
 }
 
-function processUnions(unionTypes, jsonItem) {
+function processUnions(unionTypes, json) {
+  // TODO Make the __type field name configurarable
   const unionType = _.find(unionTypes, ({ name }) => {
-    return name === jsonItem.__type
+    return name === json.__type
   })
 
-  const res = processRecord(_.omit(jsonItem, '__type'), unionType)
-
-  return res
+  return processRecord(_.omit(json, '__type'), unionType)
 }
 
-function processRecord(json, { type, name, doc, fields }) {
-  const obj = {}
-  obj[name] = _.reduce(
-    fields,
-    (m, field) => {
-      const res = processField(json[field.name], field)
-      return _.assign(res, m)
-    },
-    {},
-  )
-  return obj
-}
-
-function processArrayType(json, array) {
+function processArrayType(json, types, name) {
   if (!json) {
     if (
-      !_.some(array, item => {
+      !_.some(types, item => {
         return item === 'null'
       })
     )
       throw new Error(
         `Found a null value where that isnt allowed, expecting: ${JSON.stringify(
-          array,
+          types,
         )}`,
       )
     return null
   }
 
-  const nulllessArray = _.without(array, 'null')
+  const nonNullTypes = _.without(types, 'null')
 
-  if (nulllessArray.length === 1) {
-    const obj = {}
-    if (typeof nulllessArray[0] !== 'object') obj[nulllessArray[0]] = json
-    else {
-      if (nulllessArray[0].type === 'enum') {
-        obj[nulllessArray[0].name] = json
-        return obj
+  const results = _.compact(
+    _.map(nonNullTypes, type => {
+      const processedArrayType = {}
+
+      if (typeof type !== 'object') {
+        try {
+          const processedField = processField(json, { type, name })
+          processedArrayType[type] = processedField[name]
+          return processedArrayType
+        } catch (error) {}
+      } else {
+        if (type.type === 'enum') {
+          processedArrayType[type.name] = json
+          return processedArrayType
+        }
+        return processRecord(json, type)
       }
-      return processRecord(json, nulllessArray[0])
-    }
-    return obj
-  }
-  throw new Error('omg we have a bigger array then expected')
+    }),
+  )
+
+  return results[0]
 }
 
 module.exports = {

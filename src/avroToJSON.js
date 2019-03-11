@@ -6,16 +6,20 @@ const { isValid } = require('./utils')
 
 const baseTypeConversions = {
   string: value => {
-    return value.string || value
+    if (typeof value !== 'string') return
+    return value
   },
   boolean: value => {
-    return value.boolean || value
+    if (typeof value !== 'boolean') return
+    return value
   },
   long: value => {
-    return value.long || value
+    if (typeof value !== 'number') return
+    return value
   },
   int: value => {
-    return value.int || value
+    if (typeof value !== 'number') return
+    return value
   },
 }
 
@@ -36,9 +40,9 @@ function processRecord(record, schema) {
 
   const processedFields = _.reduce(
     fields,
-    (processedFields, field) => {
+    (m, field) => {
       const processedField = processField(record[field.name], field)
-      return _.assign(processedField, processedFields)
+      return _.assign(processedField, m)
     },
     {},
   )
@@ -117,32 +121,23 @@ function processArrayType(field, types) {
     return null
   }
 
-  const nonNullableTypes = _.without(types, 'null')
+  const nonNullTypes = _.without(types, 'null')
 
-  if (nonNullableTypes.length !== 1)
-    throw new Error(
-      `Received more type options then expected ${JSON.stringify(types)}`,
-    )
+  const results = _.compact(
+    _.map(nonNullTypes, type => {
+      if (type.type === 'enum') return field[type.name]
 
-  const nonNullableType = nonNullableTypes[0]
+      if (typeof type === 'object' && type.type && type.type === 'record')
+        return processRecord(field[type.name], type)
 
-  if (nonNullableType.type === 'enum') return field[nonNullableType.name]
-
-  if (
-    typeof nonNullableType === 'object' &&
-    nonNullableType.type &&
-    nonNullableType.type === 'record'
+      return processField(field[type], { type })
+    }),
   )
-    return processRecord(field[nonNullableType.name], nonNullableType)
-
-  return processField(field[nonNullableType], {
-    type: nonNullableType,
-  })
+  return results[0]
 }
 
 module.exports = {
   avroToJSON,
-  isValid,
   processRecord,
   processField,
   processUnion,

@@ -26,6 +26,14 @@
       "doc": "Local name of the season"
     },
     {
+      "name": "crazyfield",
+      "type": [
+        "int",
+        "string"
+      ],
+      "doc": "Something random"
+    },
+    {
       "name": "logoUrl",
       "type": [
         "null",
