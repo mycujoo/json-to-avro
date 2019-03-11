@@ -50,7 +50,16 @@ function processRecord(record, schema) {
 }
 
 function processField(field, { name, type }) {
-  if (_.isNil(field)) return field
+  if (_.isNil(field)) {
+    if (Array.isArray(type) && _.indexOf(type, 'null') !== -1) {
+      return field
+    }
+    throw new Error(
+      `Found a null value at ${name} in your record where that isnt allowed, expecting: ${JSON.stringify(
+        type,
+      )}`,
+    )
+  }
 
   const processedField = {}
 
@@ -107,20 +116,6 @@ function processUnion(union, unionTypes) {
 }
 
 function processArrayType(field, types) {
-  if (!field) {
-    if (
-      !_.some(types, type => {
-        return type === 'null'
-      })
-    )
-      throw new Error(
-        `Found a null value in your record where that isnt allowed, expecting one of: ${JSON.stringify(
-          types,
-        )}`,
-      )
-    return null
-  }
-
   const nonNullTypes = _.without(types, 'null')
 
   const results = _.compact(
@@ -129,8 +124,9 @@ function processArrayType(field, types) {
 
       if (typeof type === 'object' && type.type && type.type === 'record')
         return processRecord(field[type.name], type)
-
-      return processField(field[type], { type })
+      try {
+        return processField(field[type], { type })
+      } catch (error) {}
     }),
   )
   return results[0]
@@ -138,6 +134,7 @@ function processArrayType(field, types) {
 
 module.exports = {
   avroToJSON,
+  checkRecord,
   processRecord,
   processField,
   processUnion,

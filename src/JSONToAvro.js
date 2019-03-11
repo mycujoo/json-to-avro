@@ -2,7 +2,8 @@
 
 const _ = require('lodash')
 
-// const { isValid } = require('./utils')
+const { isValid } = require('./utils')
+
 const baseTypeConversions = {
   string: value => {
     if (typeof value !== 'string') return
@@ -22,12 +23,12 @@ const baseTypeConversions = {
   },
 }
 
-// function checkRecord(schema, record) {
-//   if (!isValid(schema, record))
-//     throw new Error(
-//       'The record that was generated isnt valid according to the avro schema you passed in!',
-//     )
-// }
+function checkRecord(schema, record) {
+  if (!isValid(schema, record))
+    throw new Error(
+      'The record that was generated isnt valid according to the avro schema you passed in!',
+    )
+}
 
 function JSONToAvro(schema, json) {
   const processedRecord = processRecord(json, schema)
@@ -112,7 +113,7 @@ function processArrayType(json, types, name) {
       })
     )
       throw new Error(
-        `Found a null value where that isnt allowed, expecting: ${JSON.stringify(
+        `Found a null value at ${name} where that isnt allowed, expecting: ${JSON.stringify(
           types,
         )}`,
       )
@@ -146,6 +147,7 @@ function processArrayType(json, types, name) {
 
 module.exports = {
   JSONToAvro,
+  checkRecord,
   processField,
   processUnions,
   processRecord,

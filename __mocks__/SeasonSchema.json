@@ -29,7 +29,9 @@
       "name": "crazyfield",
       "type": [
         "int",
-        "string"
+        "string",
+        "boolean",
+        "long"
       ],
       "doc": "Something random"
     },
