@@ -1,7 +1,7 @@
 'use strict'
 
-const { avroToJSON } = require('../')
-const { checkRecord } = require('../src/avroToJSON')
+const { avroToJSON } = require('../../')
+const { checkRecord } = require('../avroToJSON')
 const SeasonSchema = require('../__mocks__/SeasonSchema.json')
 const HighlightSchema = require('../__mocks__/HighlightSchema.json')
 
@@ -22,8 +22,10 @@ describe('Avro to JSON conversion tests', () => {
         string: 'http://logo.com',
       },
       dateFrom: 12312,
+      maybe: { boolean: true },
       dateTo: 12313,
       numberOfParticipants: 12315,
+      couldBeANumber: null,
       crazyfield: {
         string: 'crazy',
       },
@@ -51,7 +53,9 @@ describe('Avro to JSON conversion tests', () => {
         string: 'http://logo.com',
       },
       dateFrom: 12312,
+      maybe: null,
       dateTo: 12313,
+      couldBeANumber: { int: 1 },
       numberOfParticipants: 12315,
       crazyfield: {
         string: 'crazy',
@@ -72,6 +76,7 @@ describe('Avro to JSON conversion tests', () => {
       localName: 'Best season',
       logoUrl: 'http://logo.com',
       dateFrom: 12312,
+      couldBeANumber: 1,
       dateTo: 12313,
       numberOfParticipants: 12315,
       current: true,
@@ -87,6 +92,7 @@ describe('Avro to JSON conversion tests', () => {
     const AvroSeason = {
       id: 'cjsg44vwp0001cr88mfe3kkep',
       internationalName: 'Super season',
+      couldBeANumber: null,
       competitionId: 'cjsg44vyf0004cr88qro9k8mv',
       localName: {
         string: 'Best season',
@@ -95,6 +101,7 @@ describe('Avro to JSON conversion tests', () => {
         string: 'http://logo.com',
       },
       dateFrom: 12312,
+      maybe: { boolean: true },
       dateTo: 12313,
       numberOfParticipants: 12315,
       crazyfield: {
@@ -119,6 +126,7 @@ describe('Avro to JSON conversion tests', () => {
       dateTo: 12313,
       numberOfParticipants: 12315,
       current: true,
+      maybe: true,
       format: 'cup',
       teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
       eventId: 'cjsg44vyf0004cr88qro9k8mv',

@@ -1,7 +1,7 @@
 'use strict'
 
-const { JSONToAvro } = require('../')
-const { checkRecord } = require('../src/JSONToAvro')
+const { JSONToAvro } = require('../../')
+const { checkRecord } = require('../JSONToAvro')
 
 const SeasonSchema = require('../__mocks__/SeasonSchema.json')
 const HighlightSchema = require('../__mocks__/HighlightSchema.json')
@@ -34,6 +34,29 @@ describe('JSON to avro conversion tests', () => {
     }).toThrow()
   })
 
+  test('It should not throw an error ', () => {
+    const seasonJson = {
+      competitionId: '123',
+      crazyfield: 'crazy',
+      createdAt: 1550843428551,
+      current: true,
+      dateFrom: 12312,
+      dateTo: 12313,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      format: 'cup',
+      id: 'cjsg44vwp0001cr88mfe3kkep',
+      internationalName: 'Super season',
+      localName: 'Best season',
+      logoUrl: 'http://logo.com',
+      numberOfParticipants: 12315,
+      teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+    }
+    expect(() => {
+      JSONToAvro(SeasonSchema, seasonJson)
+    }).not.toThrow()
+  })
+
   test('It should throw an error because of a nonnullable array field', () => {
     const seasonJson = {
       competitionId: null,
@@ -41,6 +64,7 @@ describe('JSON to avro conversion tests', () => {
       current: true,
       dateFrom: 12312,
       dateTo: 12313,
+      maybe: true,
       eventId: 'cjsg44vyf0004cr88qro9k8mv',
       format: 'cup',
       id: 'cjsg44vwp0001cr88mfe3kkep',
@@ -69,6 +93,7 @@ describe('JSON to avro conversion tests', () => {
       },
       dateFrom: 12312,
       dateTo: 12313,
+      couldBeANumber: null,
       numberOfParticipants: 12315,
       crazyfield: {
         string: 'crazy',
@@ -84,6 +109,40 @@ describe('JSON to avro conversion tests', () => {
       checkRecord(SeasonSchema, AvroSeason)
     }).toThrow()
   })
+
+  test('It should not throw an error', () => {
+    const AvroSeason = {
+      competitionId: '123',
+      couldBeANumber: {
+        int: 1234,
+      },
+      crazyfield: {
+        string: 'crazy',
+      },
+      createdAt: 1550843428551,
+      current: true,
+      dateFrom: 12312,
+      dateTo: 12313,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      format: 'cup',
+      id: 'cjsg44vwp0001cr88mfe3kkep',
+      internationalName: 'Super season',
+      localName: {
+        string: 'Best season',
+      },
+      logoUrl: {
+        string: 'http://logo.com',
+      },
+      maybe: null,
+      numberOfParticipants: 12315,
+      teams: ['team1'],
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+    }
+    expect(() => {
+      checkRecord(SeasonSchema, AvroSeason)
+    }).not.toThrow()
+  })
+
   test(JSONToAvroToJSON(1), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
@@ -432,6 +491,100 @@ describe('JSON to avro conversion tests', () => {
       ],
       event: { id: 'cjsg44vst0000cr88768nlnfz' },
       _id: 'cjsg44vwp0001cr88mfe3kkep',
+    })
+  })
+
+  test(JSONToAvroToJSON(6), () => {
+    const seasonJson = {
+      competitionId: '123',
+      crazyfield: 'crazy',
+      createdAt: 1550843428551,
+      current: true,
+      dateFrom: 12312,
+      dateTo: 12313,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      format: 'cup',
+      id: 'cjsg44vwp0001cr88mfe3kkep',
+      internationalName: 'Super season',
+      localName: 'Best season',
+      logoUrl: 'http://logo.com',
+      numberOfParticipants: 12315,
+      teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+    }
+    const avroSeason = JSONToAvro(SeasonSchema, seasonJson)
+    expect(avroSeason).toEqual({
+      competitionId: '123',
+      couldBeANumber: null,
+      crazyfield: {
+        string: 'crazy',
+      },
+      createdAt: 1550843428551,
+      current: true,
+      dateFrom: 12312,
+      dateTo: 12313,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      format: 'cup',
+      id: 'cjsg44vwp0001cr88mfe3kkep',
+      internationalName: 'Super season',
+      localName: {
+        string: 'Best season',
+      },
+      logoUrl: {
+        string: 'http://logo.com',
+      },
+      maybe: null,
+      numberOfParticipants: 12315,
+      teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+    })
+  })
+  test(JSONToAvroToJSON(7), () => {
+    const seasonJson = {
+      competitionId: '123',
+      crazyfield: 'crazy',
+      couldBeANumber: 1234,
+      createdAt: 1550843428551,
+      current: true,
+      dateFrom: 12312,
+      dateTo: 12313,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      format: 'cup',
+      id: 'cjsg44vwp0001cr88mfe3kkep',
+      internationalName: 'Super season',
+      localName: 'Best season',
+      logoUrl: 'http://logo.com',
+      numberOfParticipants: 12315,
+      teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+    }
+    const avroSeason = JSONToAvro(SeasonSchema, seasonJson)
+    expect(avroSeason).toEqual({
+      competitionId: '123',
+      couldBeANumber: {
+        int: 1234,
+      },
+      crazyfield: {
+        string: 'crazy',
+      },
+      createdAt: 1550843428551,
+      current: true,
+      dateFrom: 12312,
+      dateTo: 12313,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      format: 'cup',
+      id: 'cjsg44vwp0001cr88mfe3kkep',
+      internationalName: 'Super season',
+      localName: {
+        string: 'Best season',
+      },
+      logoUrl: {
+        string: 'http://logo.com',
+      },
+      maybe: null,
+      numberOfParticipants: 12315,
+      teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
     })
   })
 })

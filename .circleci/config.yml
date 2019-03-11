@@ -1,0 +1,49 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:8.11.0
+
+jobs:
+  test:
+    <<: *defaults  
+    steps:
+      - checkout
+      - run: 
+          name: Install dependencies
+          command: npm install
+
+      - run:
+          name: Run tests
+          command: npm run test
+          
+  publish:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/
+            branches:
+              ignore: /.*/
+      - publish:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/
+            branches:
+              ignore: /.*/

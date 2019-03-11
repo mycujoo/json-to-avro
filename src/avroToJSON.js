@@ -6,19 +6,15 @@ const { isValid } = require('./utils')
 
 const baseTypeConversions = {
   string: value => {
-    if (typeof value !== 'string') return
     return value
   },
   boolean: value => {
-    if (typeof value !== 'boolean') return
     return value
   },
   long: value => {
-    if (typeof value !== 'number') return
     return value
   },
   int: value => {
-    if (typeof value !== 'number') return
     return value
   },
 }

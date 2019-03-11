@@ -44,6 +44,22 @@
       "doc": "Logo of the team (Absolute URL)"
     },
     {
+      "name": "couldBeANumber",
+      "type": [
+        "null",
+        "int"
+      ],
+      "doc": "This could be a number"
+    },
+    {
+      "name": "maybe",
+      "type": [
+        "null",
+        "boolean"
+      ],
+      "doc": "Maybe this field has a value"
+    },
+    {
       "name": "dateFrom",
       "type": "int",
       "logicalType": "date",

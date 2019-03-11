@@ -24,10 +24,11 @@ const baseTypeConversions = {
 }
 
 function checkRecord(schema, record) {
-  if (!isValid(schema, record))
+  if (!isValid(schema, record)) {
     throw new Error(
       'The record that was generated isnt valid according to the avro schema you passed in!',
     )
+  }
 }
 
 function JSONToAvro(schema, json) {
@@ -106,20 +107,6 @@ function processUnions(unionTypes, json) {
 }
 
 function processArrayType(json, types, name) {
-  if (!json) {
-    if (
-      !_.some(types, item => {
-        return item === 'null'
-      })
-    )
-      throw new Error(
-        `Found a null value at ${name} where that isnt allowed, expecting: ${JSON.stringify(
-          types,
-        )}`,
-      )
-    return null
-  }
-
   const nonNullTypes = _.without(types, 'null')
 
   const results = _.compact(
@@ -142,7 +129,8 @@ function processArrayType(json, types, name) {
     }),
   )
 
-  return results[0]
+  if (results.length) return results[0]
+  return null
 }
 
 module.exports = {
