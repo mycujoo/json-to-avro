@@ -1,0 +1,20 @@
+{
+  "id": "cjsg44vwp0001cr88mfe3kkep",
+  "internationalName": "Super season",
+  "competitionId": "cjsg44vyf0004cr88qro9k8mv",
+  "localName": {
+    "string": "Best season"
+  },
+  "logoUrl": {
+    "string": "http://logo.com"
+  },
+  "dateFrom": 12312,
+  "dateTo": 12313,
+  "numberOfParticipants": 12315,
+  "current": true,
+  "format": "cup",  
+  "teams": ["cjsg44vyf0004cr88qro9k8mv", "cjsg44vyf0005cr88k2b7b9pc"],
+  "eventId": "cjsg44vyf0004cr88qro9k8mv",
+  "traceToken": "cjsg44vyf0005cr88k2b7b9pc",
+  "createdAt": 1550843428551
+}

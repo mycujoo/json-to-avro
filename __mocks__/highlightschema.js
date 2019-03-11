@@ -1,0 +1,261 @@
+'use strict'
+
+module.exports = {
+  type: 'record',
+  name: 'highlight_v1',
+  doc: 'Highlighted moment for live events',
+  fields: [
+    {
+      name: '_id',
+      type: 'string',
+      doc: 'ID of the highlight',
+    },
+    {
+      name: 'event',
+      doc: 'The match/event the highlight belongs to',
+      type: {
+        type: 'record',
+        name: 'highlightEvent',
+        doc: 'The match/event the highlight belongs to',
+        fields: [
+          {
+            name: 'id',
+            type: 'string',
+            doc: 'ID of the event where the highlight belongs to',
+          },
+        ],
+      },
+    },
+    {
+      name: 'annotations',
+      doc: 'List of annotations of the highlight',
+      type: {
+        type: 'array',
+        items: {
+          name: 'Annotation',
+          type: 'record',
+          doc: 'Annotation information',
+          fields: [
+            {
+              name: 'id',
+              type: 'string',
+              doc: 'ID of the annotation',
+            },
+            {
+              name: 'elapsedTime',
+              type: 'int',
+              doc:
+                'position in the video where the annotation is marked, seconds',
+            },
+            {
+              name: 'type',
+              doc: 'Annotation Type',
+              type: [
+                'null',
+                {
+                  name: 'FootballAnnotationTypeEnum',
+                  type: 'enum',
+                  symbols: [
+                    'startPeriod',
+                    'endPeriod',
+                    'foul',
+                    'freeKick',
+                    'cornerKick',
+                    'goal',
+                    'ownGoal',
+                    'miss',
+                    'chance',
+                    'penalty',
+                    'redCard',
+                    'yellowCard',
+                    'substitution',
+                    'skill',
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'team',
+              type: [
+                'null',
+                {
+                  type: 'enum',
+                  name: 'TeamEnum',
+                  symbols: ['home', 'away'],
+                },
+              ],
+              doc: 'The team which the annotation belongs to',
+            },
+            {
+              name: 'personId',
+              doc: 'The person which the annotation belongs to',
+              type: ['null', 'string'],
+            },
+            {
+              name: 'actions',
+              doc: 'List of actions to be executed for this annotation',
+              type: {
+                type: 'array',
+                items: [
+                  {
+                    name: 'PlayerChangeAction',
+                    type: 'record',
+                    doc: 'action for changing player',
+                    fields: [
+                      {
+                        name: 'type',
+                        doc: 'The type of the player change',
+                        type: {
+                          name: 'PlayerChangeTypeEnum',
+                          type: 'enum',
+                          symbols: ['removed', 'added'],
+                        },
+                      },
+                      {
+                        name: 'personId',
+                        type: 'string',
+                        doc: 'ID of the person related to the action',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'ScoreChangeAction',
+                    type: 'record',
+                    doc: 'action for changing score',
+                    fields: [
+                      {
+                        name: 'type',
+                        doc: 'The type of the score change',
+                        type: {
+                          name: 'ScoreChangeTypeEnum',
+                          type: 'enum',
+                          symbols: ['increased', 'decreased'],
+                        },
+                      },
+                      {
+                        name: 'team',
+                        type: 'TeamEnum',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'TimerChangeAction',
+                    type: 'record',
+                    doc: 'action for changing timer status and value',
+                    fields: [
+                      {
+                        name: 'type',
+                        doc: 'The type of the change',
+                        type: {
+                          name: 'TimerChangeTypeEnum',
+                          type: 'enum',
+                          symbols: ['start', 'stop', 'update'],
+                        },
+                      },
+                      {
+                        name: 'timer',
+                        doc: 'The clock/timer position of the match in seconds',
+                        type: 'int',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'UiScoreboardVisibilityAction',
+                    type: 'record',
+                    doc: 'action for changing Scoreboard visibility',
+                    fields: [
+                      {
+                        name: 'visible',
+                        doc: 'Defines the visibility status for scoreboard',
+                        type: 'boolean',
+                      },
+                    ],
+                  },
+                  {
+                    name: 'UiTimerVisibilityAction',
+                    type: 'record',
+                    doc: 'action for changing Timer visibility',
+                    fields: [
+                      {
+                        name: 'visible',
+                        doc: 'Defines the visibility status for timer',
+                        type: 'boolean',
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+            {
+              name: 'createdAt',
+              type: 'long',
+              doc: 'The moment this annotation was included in the highlight',
+              logicalType: 'timestamp-millis',
+            },
+          ],
+        },
+      },
+    },
+    {
+      name: 'video',
+      doc: 'Video information of the highlight',
+      type: [
+        'null',
+        {
+          name: 'HighlightVideoRecord',
+          type: 'record',
+          doc: 'record of the video related to the highlight',
+          fields: [
+            {
+              name: 'position',
+              type: 'int',
+              doc:
+                'Position of the start of the video highlight in the main event video',
+            },
+            {
+              name: 'duration',
+              type: 'int',
+              doc: 'Duration of the video highlight',
+            },
+            {
+              name: 'videoUrl',
+              type: ['null', 'string'],
+              doc: 'url of the m3u8 of the highlight',
+            },
+            {
+              name: 'imageUrl',
+              type: ['null', 'string'],
+              doc: 'absolute url from the thumbnail of the highlight',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'primaryAnnotationId',
+      doc: 'Id of the main annotation',
+      type: ['null', 'string'],
+    },
+    {
+      name: 'deleted',
+      type: 'boolean',
+      doc: 'Highlight is deleted or still active',
+    },
+    {
+      name: 'eventId',
+      type: 'string',
+      doc: 'Unique ID for the Kafka event',
+    },
+    {
+      name: 'traceToken',
+      type: 'string',
+      doc: 'Trace token for this request, coming from upstream service',
+    },
+    {
+      name: 'createdAt',
+      type: 'long',
+      doc: 'Time when request was processed by the service',
+      logicalType: 'timestamp-millis',
+    },
+  ],
+}

@@ -1,0 +1,98 @@
+{
+  "type": "record",
+  "name": "competitionSeason",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "doc": "ID of the season"
+    },
+    {
+      "name": "internationalName",
+      "type": "string",
+      "doc": "International name of the season"
+    },
+    {
+      "name": "competitionId",
+      "type": "string",
+      "doc": "ID of the parent competition of this season"
+    },
+    {
+      "name": "localName",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Local name of the season"
+    },
+    {
+      "name": "logoUrl",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Logo of the team (Absolute URL)"
+    },
+    {
+      "name": "dateFrom",
+      "type": "int",
+      "logicalType": "date",
+      "doc": "Date when season begins"
+    },
+    {
+      "name": "dateTo",
+      "type": "int",
+      "logicalType": "date",
+      "doc": "Date when season ends"
+    },
+    {
+      "name": "numberOfParticipants",
+      "type": "int",
+      "doc": "Number of teams participating in this season"
+    },
+    {
+      "name": "current",
+      "type": "boolean",
+      "doc": "Flag to indicate if it is the current season"
+    },
+    {
+      "name": "format",
+      "type": {
+        "type": "enum",
+        "name": "competitionFormats",
+        "symbols": [
+          "league",
+          "cup",
+          "superCup",
+          "qualifyingTournament",
+          "tournamentFestival"
+        ]
+      },
+      "doc": "Format of the season"
+    },
+    {
+      "name": "teams",
+      "type": {
+        "type": "array",
+        "items": "string"
+      },
+      "doc": "IDs of teams participating in this season"
+    },
+    {
+      "name": "eventId",
+      "type": "string",
+      "doc": "Unique ID for the Kafka event"
+    },
+    {
+      "name": "traceToken",
+      "type": "string",
+      "doc": "Trace token for this request, coming from upstream service"
+    },
+    {
+      "name": "createdAt",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "Time when request was processed by the service"
+    }
+  ]
+}
