@@ -4,6 +4,21 @@ const _ = require('lodash')
 
 const { isValid } = require('./utils')
 
+const baseTypeConversions = {
+  string: value => {
+    return value.string || value
+  },
+  boolean: value => {
+    return value.boolean || value
+  },
+  long: value => {
+    return value.long || value
+  },
+  int: value => {
+    return value.int || value
+  },
+}
+
 function checkAvro(schema, avro) {
   if (!isValid(schema, avro))
     throw new Error(
@@ -13,13 +28,11 @@ function checkAvro(schema, avro) {
 
 function avroToJSON(schema, avro) {
   checkAvro(schema, avro)
-  const processedRecord = processRecord({ avro, schema })
-  const jsonDoc = processedRecord[schema.name]
-  return jsonDoc
+  return processRecord({ avro, schema })
 }
 
 function processRecord({ avro, schema }) {
-  const { name, fields } = schema
+  const { fields } = schema
 
   const processedFields = _.reduce(
     fields,
@@ -29,93 +42,63 @@ function processRecord({ avro, schema }) {
     },
     {},
   )
-
-  const obj = {}
-  obj[name] = processedFields
-  return obj
+  return processedFields
 }
 
 function processField(avro, { name, doc, type }) {
   if (_.isNil(avro)) return avro
 
-  const options = {
-    string: value => {
-      return value.string || value
-    },
-    enum: (value, type) => {
-      const obj = {}
-      obj[type.name] = value
-    },
-    boolean: value => {
-      return value.boolean || value
-    },
-    long: value => {
-      return value.long || value
-    },
-    int: value => {
-      return value.int || value
-    },
-  }
+  const processedField = {}
 
-  const option = options[type]
+  const processBaseType = baseTypeConversions[type]
 
-  if (option) {
-    const value = options[type](avro, type)
-    if (!name) return value
-    const obj = {}
-    obj[name] = value
-    return obj
+  if (processBaseType) {
+    const processedBaseType = processBaseType(avro, type)
+    if (!name) return processedBaseType
+    processedField[name] = processedBaseType
+    return processedField
   }
 
   if (Array.isArray(type)) {
-    const obj = {}
-    obj[name] = processArrayType(avro, type)
-    return obj
+    processedField[name] = processArrayType(avro, type)
+    return processedField
   }
 
   if (typeof type === 'object') {
     if (type.type === 'record') {
-      const res = processRecord({ avro, schema: type })
-      const doc = {}
-      doc[name] = res[type.name]
-      return doc
+      processedField[name] = processRecord({ avro, schema: type })
+      return processedField
     }
     if (type.type === 'array') {
       if (Array.isArray(type.items)) {
-        const res = _.map(avro, item => {
+        const processedUnions = _.map(avro, item => {
           return processUnions(item, type.items)
         })
-        const obj = {}
-        obj[name] = res
+        processedField[name] = processedUnions
 
-        return obj
+        return processedField
       } else if (typeof type.items === 'object') {
-        const res = _.map(avro, item => {
-          const rec = processRecord({ avro: item, schema: type.items })
-          return rec[type.items.name]
+        const processedRecords = _.map(avro, item => {
+          return processRecord({ avro: item, schema: type.items })
         })
-        const obj = {}
-        obj[name] = res
-        return obj
+        processedField[name] = processedRecords
+        return processedField
       }
     }
   }
 
-  const obj = {}
-  obj[name] = avro
-  return obj
+  processedField[name] = avro
+  return processedField
 }
 
 function processUnions(avro, unionTypes) {
-  if (typeof avro === 'object' && avro.Branch$) avro = avro.Branch$
   const union = _.find(unionTypes, ({ name }) => {
     if (avro[name]) return true
   })
-  const rec = avro[union.name]
-  const res = processRecord({ avro: rec, schema: union })
-  const doc = res[union.name]
-  doc.__type = union.name
-  return doc
+  const record = avro[union.name]
+  const processedRecord = processRecord({ avro: record, schema: union })
+  processedRecord.__type = union.name
+  return processedRecord
 }
 
 function processArrayType(avro, array) {
@@ -149,7 +132,7 @@ function processArrayType(avro, array) {
       value = processRecord({
         avro: avro[nulllessArray[0].name],
         schema: nulllessArray[0],
-      })[nulllessArray[0].name]
+      })
     } else
       value = processField(avro[nulllessArray[0]], {
         type: nulllessArray[0],
