@@ -5,7 +5,7 @@ Implement configure the key that is used to set and detect custom union multi re
 
 ## JSONToAvro
 
-To convert JSON to avro-serializable JSON, supply the avro schema in JSON format and a record in plain JSON format:
+To convert plain JSON to avro-serializable JSON, supply the avro schema in JSON format e.g:
 
 ```javascript
 const { JSONToAvro } = require('json-to-avro')
@@ -51,6 +51,8 @@ const avroRecord = JSONToAvro(AvroSchema, JSONRecord)
 // }
 ```
 ## AvroToJSON
+
+And vice versa.
 
 ```javascript
 const { avroToJSON } = require('json-to-avro')
