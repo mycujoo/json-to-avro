@@ -1,16 +1,24 @@
 'use strict'
-const _ = require('lodash')
+
 const { avroToJSON, JSONToAvro } = require('../')
 
 const hl = require('../__mocks__/AvroHighlight.json')
 const season = require('../__mocks__/AvroSeason.json')
 
-describe.only('Avro schema to mongoose tests', () => {
-  test('It should convert the season doc properly to json', () => {
-    const convertedSeason = avroToJSON(
-      require('../__mocks__/seasonschema.json'),
-      season,
-    )
+const SeasonSchema = require('../__mocks__/SeasonSchema.json')
+const HighlightSchema = require('../__mocks__/HighlightSchema.json')
+
+function avroToJSONToavro(nr) {
+  return `It should convert an avro doc to JSON and back #${nr}`
+}
+
+function JSONToAvroToJSON(nr) {
+  return `It should convert a JSON doc to avro and back #${nr}`
+}
+
+describe('Avro to JSON to avro conversion tests', () => {
+  test(avroToJSONToavro(1), () => {
+    const convertedSeason = avroToJSON(SeasonSchema, season)
     expect(convertedSeason).toEqual({
       id: 'cjsg44vwp0001cr88mfe3kkep',
       internationalName: 'Super season',
@@ -27,13 +35,13 @@ describe.only('Avro schema to mongoose tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     })
+
+    const avroSeason = JSONToAvro(SeasonSchema, convertedSeason)
+    expect(avroSeason).toEqual(season)
   })
 
-  test('It should convert the HL doc properly to json', () => {
-    const convertedHiglight = avroToJSON(
-      require('../__mocks__/highlightschema'),
-      hl,
-    )
+  test(avroToJSONToavro(2), () => {
+    const convertedHiglight = avroToJSON(HighlightSchema, hl)
     expect(convertedHiglight).toEqual({
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -62,9 +70,12 @@ describe.only('Avro schema to mongoose tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     })
+
+    const avroHighlight = JSONToAvro(HighlightSchema, convertedHiglight)
+    expect(avroHighlight).toEqual(hl)
   })
 
-  test('It should convert a highlight to avro', () => {
+  test(JSONToAvroToJSON(1), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -76,7 +87,6 @@ describe.only('Avro schema to mongoose tests', () => {
           elapsedTime: 10,
           type: 'goal',
           team: 'home',
-          personId: null,
           actions: [
             {
               __type: 'ScoreChangeAction',
@@ -87,17 +97,14 @@ describe.only('Avro schema to mongoose tests', () => {
           createdAt: 1550843428526,
         },
       ],
-      video: { position: 10, duration: 500, videoUrl: null, imageUrl: null },
+      video: { position: 10, duration: 500 },
       primaryAnnotationId: 'cjsg44vxp0002cr88iuh3ymff',
       deleted: false,
       eventId: 'cjsg44vyf0004cr88qro9k8mv',
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const avroHighlight = JSONToAvro(
-      require('../__mocks__/highlightschema'),
-      hl,
-    )
+    const avroHighlight = JSONToAvro(HighlightSchema, hl)
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
@@ -135,9 +142,11 @@ describe.only('Avro schema to mongoose tests', () => {
       event: { id: 'cjsg44vst0000cr88768nlnfz' },
       _id: 'cjsg44vwp0001cr88mfe3kkep',
     })
+    const convertedHiglight = avroToJSON(HighlightSchema, avroHighlight)
+    expect(convertedHiglight).toEqual(hl)
   })
 
-  test('It should convert another highlight to avro', () => {
+  test(JSONToAvroToJSON(2), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -149,22 +158,18 @@ describe.only('Avro schema to mongoose tests', () => {
           elapsedTime: 10,
           type: 'goal',
           team: 'home',
-          personId: null,
           actions: [],
           createdAt: 1550843428526,
         },
       ],
-      video: { position: 10, duration: 500, videoUrl: null, imageUrl: null },
+      video: { position: 10, duration: 500 },
       primaryAnnotationId: 'cjsg44vxp0002cr88iuh3ymff',
       deleted: false,
       eventId: 'cjsg44vyf0004cr88qro9k8mv',
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const avroHighlight = JSONToAvro(
-      require('../__mocks__/highlightschema'),
-      hl,
-    )
+    const avroHighlight = JSONToAvro(HighlightSchema, hl)
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
@@ -197,24 +202,21 @@ describe.only('Avro schema to mongoose tests', () => {
     })
   })
 
-  test('It should convert one more highlight to avro', () => {
+  test(JSONToAvroToJSON(3), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
         id: 'cjsg44vst0000cr88768nlnfz',
       },
       annotations: [],
-      video: { position: 10, duration: 500, videoUrl: null, imageUrl: null },
+      video: { position: 10, duration: 500 },
       primaryAnnotationId: 'cjsg44vxp0002cr88iuh3ymff',
       deleted: false,
       eventId: 'cjsg44vyf0004cr88qro9k8mv',
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const avroHighlight = JSONToAvro(
-      require('../__mocks__/highlightschema'),
-      hl,
-    )
+    const avroHighlight = JSONToAvro(HighlightSchema, hl)
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
@@ -235,9 +237,11 @@ describe.only('Avro schema to mongoose tests', () => {
       event: { id: 'cjsg44vst0000cr88768nlnfz' },
       _id: 'cjsg44vwp0001cr88mfe3kkep',
     })
+    const convertedHiglight = avroToJSON(HighlightSchema, avroHighlight)
+    expect(convertedHiglight).toEqual(hl)
   })
 
-  test('It should convert a highligh with multiple actions to avro', () => {
+  test(JSONToAvroToJSON(4), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -271,10 +275,7 @@ describe.only('Avro schema to mongoose tests', () => {
       createdAt: 1550843428551,
     }
 
-    const avroHighlight = JSONToAvro(
-      require('../__mocks__/highlightschema'),
-      hl,
-    )
+    const avroHighlight = JSONToAvro(HighlightSchema, hl)
 
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
@@ -319,15 +320,12 @@ describe.only('Avro schema to mongoose tests', () => {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
     })
 
-    const jsonHighlight = avroToJSON(
-      require('../__mocks__/highlightschema'),
-      avroHighlight,
-    )
+    const jsonHighlight = avroToJSON(HighlightSchema, avroHighlight)
 
-    expect(jsonHighlight).toEqual(_.omitBy(hl, _.isNil))
+    expect(jsonHighlight).toEqual(hl)
   })
 
-  test('It should convert a highligh with multiple annotations and actions to avro', () => {
+  test(JSONToAvroToJSON(5), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -339,7 +337,6 @@ describe.only('Avro schema to mongoose tests', () => {
           elapsedTime: 10,
           type: 'goal',
           team: 'home',
-          personId: null,
           actions: [
             {
               __type: 'ScoreChangeAction',
@@ -368,7 +365,7 @@ describe.only('Avro schema to mongoose tests', () => {
           createdAt: 1550843428526,
         },
       ],
-      video: { position: 10, duration: 500, videoUrl: null, imageUrl: null },
+      video: { position: 10, duration: 500 },
       primaryAnnotationId: 'cjsg44vxp0002cr88iuh3ymff',
       deleted: false,
       eventId: 'cjsg44vyf0004cr88qro9k8mv',
@@ -376,10 +373,7 @@ describe.only('Avro schema to mongoose tests', () => {
       createdAt: 1550843428551,
     }
 
-    const avroHighlight = JSONToAvro(
-      require('../__mocks__/highlightschema'),
-      hl,
-    )
+    const avroHighlight = JSONToAvro(HighlightSchema, hl)
 
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
@@ -438,5 +432,7 @@ describe.only('Avro schema to mongoose tests', () => {
       event: { id: 'cjsg44vst0000cr88768nlnfz' },
       _id: 'cjsg44vwp0001cr88mfe3kkep',
     })
+    const convertedHiglight = avroToJSON(HighlightSchema, avroHighlight)
+    expect(convertedHiglight).toEqual(hl)
   })
 })

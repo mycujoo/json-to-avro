@@ -2,23 +2,36 @@
 
 const _ = require('lodash')
 
+const { isValid } = require('./utils')
+
+function checkAvro(schema, avro) {
+  if (!isValid(schema, avro))
+    throw new Error(
+      'The avro data that you passed in isnt valid according to the schema you passed in.',
+    )
+}
+
 function avroToJSON(schema, avro) {
-  const res = processRecord({ avro, schema })
-  const doc = res[schema.name]
-  return doc
+  checkAvro(schema, avro)
+  const processedRecord = processRecord({ avro, schema })
+  const jsonDoc = processedRecord[schema.name]
+  return jsonDoc
 }
 
 function processRecord({ avro, schema }) {
   const { name, fields } = schema
-  const obj = {}
-  obj[name] = _.reduce(
+
+  const processedFields = _.reduce(
     fields,
-    (m, field) => {
-      const res = processField(avro[field.name], field)
-      return _.assign(res, m)
+    (processedFields, field) => {
+      const processedField = processField(avro[field.name], field)
+      return _.assign(processedField, processedFields)
     },
     {},
   )
+
+  const obj = {}
+  obj[name] = processedFields
   return obj
 }
 
@@ -149,6 +162,7 @@ function processArrayType(avro, array) {
 
 module.exports = {
   avroToJSON,
+  isValid,
   processRecord,
   processField,
   processUnions,

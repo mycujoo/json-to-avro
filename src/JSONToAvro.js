@@ -2,10 +2,20 @@
 
 const _ = require('lodash')
 
+const { isValid } = require('./utils')
+
+function checkAvro(schema, avro) {
+  if (!isValid(schema, avro))
+    throw new Error(
+      'The avro that was generated isnt valid according to the schema you passed in!',
+    )
+}
+
 function JSONToAvro(schema, json) {
   const res = processRecord(json, schema)
-  const doc = res[schema.name]
-  return doc
+  const avro = res[schema.name]
+  checkAvro(schema, avro)
+  return avro
 }
 
 function processField(json, { name, doc, type }) {
@@ -54,31 +64,29 @@ function processField(json, { name, doc, type }) {
 
     if (type.type === 'array') {
       const obj = {}
-      if (!Array.isArray(type.items)) {
+      if (Array.isArray(type.items)) {
+        obj[name] = _.map(json, processUnions.bind(null, type.items))
+      } else if (typeof type.items !== 'object') {
+        obj[name] = json
+      } else {
         obj[name] = _.map(json, item => {
           const rec = processRecord(item, type.items)
           return rec[type.items.name]
         })
-        return obj
       }
-      obj[name] = _.map(json, processUnions.bind(null, type.items))
+
       return obj
     }
 
     if (type.type === 'enum') {
       const obj = {}
-      // const enumDoc = {}
-      // enumDoc[type.name] = json
       obj[name] = json
       return obj
     }
   }
   const obj = {}
-  // const subDoc = {}
-  // subDoc[type] = json
   obj[name] = json
   return obj
-  // throw new Error(`Found an unknown avro type: ${JSON.stringify(type)}`)
 }
 
 function processUnions(unionTypes, jsonItem) {
