@@ -1,7 +1,7 @@
 # json-to-avro
 
 TODO:
-Implement configure the key that is used to set and detect custom union records
+Implement configure the key that is used to set and detect custom union multi record typed types.
 
 ## JSONToAvro
 
