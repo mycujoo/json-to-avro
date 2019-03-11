@@ -19,25 +19,25 @@ const baseTypeConversions = {
   },
 }
 
-function checkAvro(schema, avro) {
-  if (!isValid(schema, avro))
+function checkRecord(schema, record) {
+  if (!isValid(schema, record))
     throw new Error(
-      'The avro data that you passed in isnt valid according to the schema you passed in.',
+      'The record that you passed in isnt valid according to the avro schema you passed in.',
     )
 }
 
-function avroToJSON(schema, avro) {
-  checkAvro(schema, avro)
-  return processRecord({ avro, schema })
+function avroToJSON(schema, record) {
+  checkRecord(schema, record)
+  return processRecord(record, schema)
 }
 
-function processRecord({ avro, schema }) {
+function processRecord(record, schema) {
   const { fields } = schema
 
   const processedFields = _.reduce(
     fields,
     (processedFields, field) => {
-      const processedField = processField(avro[field.name], field)
+      const processedField = processField(record[field.name], field)
       return _.assign(processedField, processedFields)
     },
     {},
@@ -45,41 +45,41 @@ function processRecord({ avro, schema }) {
   return processedFields
 }
 
-function processField(avro, { name, doc, type }) {
-  if (_.isNil(avro)) return avro
+function processField(field, { name, type }) {
+  if (_.isNil(field)) return field
 
   const processedField = {}
 
   const processBaseType = baseTypeConversions[type]
 
   if (processBaseType) {
-    const processedBaseType = processBaseType(avro, type)
+    const processedBaseType = processBaseType(field, type)
     if (!name) return processedBaseType
     processedField[name] = processedBaseType
     return processedField
   }
 
   if (Array.isArray(type)) {
-    processedField[name] = processArrayType(avro, type)
+    processedField[name] = processArrayType(field, type)
     return processedField
   }
 
   if (typeof type === 'object') {
     if (type.type === 'record') {
-      processedField[name] = processRecord({ avro, schema: type })
+      processedField[name] = processRecord(field, type)
       return processedField
     }
     if (type.type === 'array') {
       if (Array.isArray(type.items)) {
-        const processedUnions = _.map(avro, item => {
-          return processUnions(item, type.items)
+        const processedUnions = _.map(field, item => {
+          return processUnion(item, type.items)
         })
         processedField[name] = processedUnions
 
         return processedField
       } else if (typeof type.items === 'object') {
-        const processedRecords = _.map(avro, item => {
-          return processRecord({ avro: item, schema: type.items })
+        const processedRecords = _.map(field, item => {
+          return processRecord(item, type.items)
         })
         processedField[name] = processedRecords
         return processedField
@@ -87,60 +87,57 @@ function processField(avro, { name, doc, type }) {
     }
   }
 
-  processedField[name] = avro
+  processedField[name] = field
   return processedField
 }
 
-function processUnions(avro, unionTypes) {
-  const union = _.find(unionTypes, ({ name }) => {
-    if (avro[name]) return true
+function processUnion(union, unionTypes) {
+  const unionType = _.find(unionTypes, ({ name }) => {
+    if (union[name]) return true
   })
-  const record = avro[union.name]
-  const processedRecord = processRecord({ avro: record, schema: union })
-  processedRecord.__type = union.name
+  const record = union[unionType.name]
+  const processedRecord = processRecord(record, unionType)
+  // Make field __type configurable
+  processedRecord.__type = unionType.name
   return processedRecord
 }
 
-function processArrayType(avro, array) {
-  if (typeof avro === 'object' && avro.Branch$) avro = avro.Branch$
-  if (!avro) {
+function processArrayType(field, types) {
+  if (!field) {
     if (
-      !_.some(array, item => {
-        return item === 'null'
+      !_.some(types, type => {
+        return type === 'null'
       })
     )
       throw new Error(
-        `Found a null value where that isnt allowed, expecting: ${JSON.stringify(
-          array,
+        `Found a null value in your record where that isnt allowed, expecting one of: ${JSON.stringify(
+          types,
         )}`,
       )
     return null
   }
 
-  const nulllessArray = _.without(array, 'null')
+  const nonNullableTypes = _.without(types, 'null')
 
-  if (nulllessArray.length === 1) {
-    let value
-    if (nulllessArray[0].type === 'enum') {
-      return avro[nulllessArray[0].name]
-    }
-    if (
-      typeof nulllessArray[0] === 'object' &&
-      nulllessArray[0].type &&
-      nulllessArray[0].type === 'record'
-    ) {
-      value = processRecord({
-        avro: avro[nulllessArray[0].name],
-        schema: nulllessArray[0],
-      })
-    } else
-      value = processField(avro[nulllessArray[0]], {
-        type: nulllessArray[0],
-      })
+  if (nonNullableTypes.length !== 1)
+    throw new Error(
+      `Received more type options then expected ${JSON.stringify(types)}`,
+    )
 
-    return value
-  }
-  return console.error('omg we have a bigger array then expected')
+  const nonNullableType = nonNullableTypes[0]
+
+  if (nonNullableType.type === 'enum') return field[nonNullableType.name]
+
+  if (
+    typeof nonNullableType === 'object' &&
+    nonNullableType.type &&
+    nonNullableType.type === 'record'
+  )
+    return processRecord(field[nonNullableType.name], nonNullableType)
+
+  return processField(field[nonNullableType], {
+    type: nonNullableType,
+  })
 }
 
 module.exports = {
@@ -148,6 +145,6 @@ module.exports = {
   isValid,
   processRecord,
   processField,
-  processUnions,
+  processUnion,
   processArrayType,
 }
