@@ -31,7 +31,7 @@ function checkRecord(schema, record) {
   }
 }
 
-function JSONToAvro(schema, json) {
+function jsonToAvro(schema, json) {
   const processedRecord = processRecord(json, schema)
   const record = processedRecord[schema.name]
   checkRecord(schema, record)
@@ -135,7 +135,7 @@ function processArrayType(json, types, name) {
 }
 
 module.exports = {
-  JSONToAvro,
+  jsonToAvro,
   checkRecord,
   processField,
   processUnions,

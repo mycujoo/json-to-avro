@@ -1,6 +1,6 @@
 'use strict'
 
 module.exports = {
-  avroToJSON: require('./src/avroToJSON').avroToJSON,
-  JSONToAvro: require('./src/JSONToAvro').JSONToAvro,
+  avroToJson: require('./src/avroToJson').avroToJson,
+  jsonToAvro: require('./src/jsonToAvro').jsonToAvro,
 }

@@ -1,11 +1,11 @@
 'use strict'
 
-const { avroToJSON } = require('../../')
-const { checkRecord } = require('../avroToJSON')
+const { avroToJson } = require('../../')
+const { checkRecord } = require('../avroToJson')
 const SeasonSchema = require('../__mocks__/SeasonSchema.json')
 const HighlightSchema = require('../__mocks__/HighlightSchema.json')
 
-function avroToJSONToavro(nr) {
+function avroToJsonToavro(nr) {
   return `It should convert an avro doc to JSON #${nr}`
 }
 
@@ -41,7 +41,7 @@ describe('Avro to JSON conversion tests', () => {
     }).toThrow()
   })
 
-  test(avroToJSONToavro(1), () => {
+  test(avroToJsonToavro(1), () => {
     const AvroSeason = {
       id: 'cjsg44vwp0001cr88mfe3kkep',
       internationalName: 'Super season',
@@ -67,7 +67,7 @@ describe('Avro to JSON conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const convertedSeason = avroToJSON(SeasonSchema, AvroSeason)
+    const convertedSeason = avroToJson(SeasonSchema, AvroSeason)
     expect(convertedSeason).toEqual({
       id: 'cjsg44vwp0001cr88mfe3kkep',
       internationalName: 'Super season',
@@ -88,7 +88,7 @@ describe('Avro to JSON conversion tests', () => {
     })
   })
 
-  test(avroToJSONToavro(2), () => {
+  test(avroToJsonToavro(2), () => {
     const AvroSeason = {
       id: 'cjsg44vwp0001cr88mfe3kkep',
       internationalName: 'Super season',
@@ -114,7 +114,7 @@ describe('Avro to JSON conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const convertedSeason = avroToJSON(SeasonSchema, AvroSeason)
+    const convertedSeason = avroToJson(SeasonSchema, AvroSeason)
     expect(convertedSeason).toEqual({
       id: 'cjsg44vwp0001cr88mfe3kkep',
       internationalName: 'Super season',
@@ -135,7 +135,7 @@ describe('Avro to JSON conversion tests', () => {
     })
   })
 
-  test(avroToJSONToavro(3), () => {
+  test(avroToJsonToavro(3), () => {
     const AvroHighlight = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -179,7 +179,7 @@ describe('Avro to JSON conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const convertedHiglight = avroToJSON(HighlightSchema, AvroHighlight)
+    const convertedHiglight = avroToJson(HighlightSchema, AvroHighlight)
     expect(convertedHiglight).toEqual({
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
