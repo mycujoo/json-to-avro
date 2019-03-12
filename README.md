@@ -101,7 +101,9 @@ const JSONRecord = avroToJson(AvroSchema, AvroRecord)
 
 ## Note
 
-If you create a schema that holds a structure like this with an array of items with multiple record types as option, the JSON items in the array, in this example actions, will have a field ```__type``` with the name of the record type. Vice versa, if you want to convert plain JSON to avro, you must configure the ```__type``` field to be in sync the record type name.
+If you create a schema that holds a structure like this with an array of items with multiple record types as option, the JSON items in the array, in this example actions, will receive an extra field ```__type``` with the name of the record type as value. If we don't add this field you will not be able to differentiate between the record types in the actions array.
+
+Vice versa, if you want to convert plain JSON to avro, you must configure the ```__type``` field to be in sync the record type name.
 ```json
 {
   "name": "actions",
@@ -110,49 +112,26 @@ If you create a schema that holds a structure like this with an array of items w
     "type": "array",
     "items": [
       {
-        "name": "PlayerChangeAction",
+        "name": "UiScoreboardVisibilityAction",
         "type": "record",
-        "doc": "action for changing player",
+        "doc": "action for changing Scoreboard visibility",
         "fields": [
           {
-            "name": "type",
-            "doc": "The type of the player change",
-            "type": {
-              "name": "PlayerChangeTypeEnum",
-              "type": "enum",
-              "symbols": [
-                "removed",
-                "added"
-              ]
-            }
-          },
-          {
-            "name": "personId",
-            "type": "string",
-            "doc": "ID of the person related to the action"
+            "name": "visible",
+            "doc": "Defines the visibility status for scoreboard",
+            "type": "boolean"
           }
         ]
       },
       {
-        "name": "ScoreChangeAction",
+        "name": "UiTimerVisibilityAction",
         "type": "record",
-        "doc": "action for changing score",
+        "doc": "action for changing Timer visibility",
         "fields": [
           {
-            "name": "type",
-            "doc": "The type of the score change",
-            "type": {
-              "name": "ScoreChangeTypeEnum",
-              "type": "enum",
-              "symbols": [
-                "increased",
-                "decreased"
-              ]
-            }
-          },
-          {
-            "name": "team",
-            "type": "TeamEnum"
+            "name": "visible",
+            "doc": "Defines the visibility status for timer",
+            "type": "boolean"
           }
         ]
       }
