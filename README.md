@@ -101,9 +101,9 @@ const JSONRecord = avroToJson(AvroSchema, AvroRecord)
 
 ## Note
 
-If you create a schema that holds a structure like in the example down bellow, with an array of items that holds multiple different record types as options, the items in the converted json will receive an extra field ```__type``` with the name of the record type as value. If we don't add this field you will not be able to differentiate between the record types in the actions array.
+If you create a schema that holds a structure like in the example down below, with an array of items that holds multiple different record types as options, the items in the converted json will receive an extra field ```__type``` with the name of the record type as value. If we don't add this field you will not be able to differentiate between the record types in the actions array.
 
-Vice versa, if you want to convert plain JSON to avro, you must add the ```__type``` field to be in sync the record type name.
+
 ```json
 {
   "name": "actions",
@@ -138,4 +138,48 @@ Vice versa, if you want to convert plain JSON to avro, you must add the ```__typ
     ]
   }
 }
+
+// Avro serializable json
+{
+  "actions": [
+    {
+      "UiTimerVisibilityAction": {
+        "visible": true
+      }
+    },
+    {
+      "UiScoreboardVisibilityAction": {
+        "visible": true
+      }
+    }
+  ]  
+}
+// Plain parsed json
+{
+  "actions": [
+    {
+      "visible": true
+    },
+    {
+      "visible": true
+    }
+  ]
+}
+
+// Parsed by avro to json.
+{
+  "actions": [
+    {
+      "__type": "UiTimerVisibilityAction",
+      "visible": true
+    },
+    {
+      "__type": "UiScoreboardVisibilityAction",
+      "visible": true
+    }
+  ]
+}
+
 ```
+
+Vice versa, if you want to convert plain JSON to avro, you must add the ```__type``` field to be in sync the record type name.
