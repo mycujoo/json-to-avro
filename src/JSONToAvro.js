@@ -34,6 +34,7 @@ function checkRecord(schema, record) {
 function JSONToAvro(schema, json) {
   const processedRecord = processRecord(json, schema)
   const record = processedRecord[schema.name]
+  checkRecord(schema, record)
   return record
 }
 

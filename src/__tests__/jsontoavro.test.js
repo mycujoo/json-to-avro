@@ -587,4 +587,82 @@ describe('JSON to avro conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
     })
   })
+
+  test(JSONToAvroToJSON(8), () => {
+    const hl = {
+      _id: 'cjsg44vwp0001cr88mfe3kkep',
+      event: {
+        id: 'cjsg44vst0000cr88768nlnfz',
+      },
+      annotations: [
+        {
+          id: 'cjsg44vxp0002cr88iuh3ymff',
+          elapsedTime: 10,
+          type: 'goal',
+          team: 'home',
+          actions: [
+            {
+              __type: 'UiTimerVisibilityAction',
+              visible: true,
+            },
+            {
+              __type: 'UiScoreboardVisibilityAction',
+              visible: true,
+            },
+          ],
+          createdAt: 1550843428526,
+        },
+      ],
+      video: { position: 10, duration: 500 },
+      primaryAnnotationId: 'cjsg44vxp0002cr88iuh3ymff',
+      deleted: false,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+      createdAt: 1550843428551,
+    }
+
+    const avroHighlight = JSONToAvro(HighlightSchema, hl)
+
+    expect(avroHighlight).toEqual({
+      createdAt: 1550843428551,
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      deleted: false,
+      primaryAnnotationId: {
+        string: 'cjsg44vxp0002cr88iuh3ymff',
+      },
+      video: {
+        HighlightVideoRecord: {
+          imageUrl: null,
+          videoUrl: null,
+          duration: 500,
+          position: 10,
+        },
+      },
+      annotations: [
+        {
+          createdAt: 1550843428526,
+          actions: [
+            {
+              UiTimerVisibilityAction: {
+                visible: true,
+              },
+            },
+            {
+              UiScoreboardVisibilityAction: {
+                visible: true,
+              },
+            },
+          ],
+          personId: null,
+          team: { TeamEnum: 'home' },
+          type: { FootballAnnotationTypeEnum: 'goal' },
+          elapsedTime: 10,
+          id: 'cjsg44vxp0002cr88iuh3ymff',
+        },
+      ],
+      event: { id: 'cjsg44vst0000cr88768nlnfz' },
+      _id: 'cjsg44vwp0001cr88mfe3kkep',
+    })
+  })
 })
