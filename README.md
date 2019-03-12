@@ -101,9 +101,9 @@ const JSONRecord = avroToJson(AvroSchema, AvroRecord)
 
 ## Note
 
-If you create a schema that holds a structure like this with an array of items with multiple record types as option, the JSON items in the array, in this example actions, will receive an extra field ```__type``` with the name of the record type as value. If we don't add this field you will not be able to differentiate between the record types in the actions array.
+If you create a schema that holds a structure like in the example down bellow, with an array of items that holds multiple different record types as options, the items in the converted json will receive an extra field ```__type``` with the name of the record type as value. If we don't add this field you will not be able to differentiate between the record types in the actions array.
 
-Vice versa, if you want to convert plain JSON to avro, you must configure the ```__type``` field to be in sync the record type name.
+Vice versa, if you want to convert plain JSON to avro, you must add the ```__type``` field to be in sync the record type name.
 ```json
 {
   "name": "actions",
