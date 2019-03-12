@@ -34,8 +34,6 @@ workflows:
   test-deploy:
     jobs:
       - test:
-          requires:
-            - test
           filters:
             tags:
               only: /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/
@@ -43,8 +41,8 @@ workflows:
               - master
               - develop
       - publish:
-          requires:
-            - test
+          # requires:
+          #   - test
           filters:
             tags:
               only: /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/
