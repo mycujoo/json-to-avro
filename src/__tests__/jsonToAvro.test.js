@@ -1,12 +1,12 @@
 'use strict'
 
-const { JSONToAvro } = require('../../')
-const { checkRecord } = require('../JSONToAvro')
+const { jsonToAvro } = require('../../')
+const { checkRecord } = require('../jsonToAvro')
 
 const SeasonSchema = require('../__mocks__/SeasonSchema.json')
 const HighlightSchema = require('../__mocks__/HighlightSchema.json')
 
-function JSONToAvroToJSON(nr) {
+function jsonToAvroToJSON(nr) {
   return `It should convert a JSON doc to avro #${nr}`
 }
 
@@ -30,7 +30,7 @@ describe('JSON to avro conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
     }
     expect(() => {
-      JSONToAvro(SeasonSchema, seasonJson)
+      jsonToAvro(SeasonSchema, seasonJson)
     }).toThrow()
   })
 
@@ -53,7 +53,7 @@ describe('JSON to avro conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
     }
     expect(() => {
-      JSONToAvro(SeasonSchema, seasonJson)
+      jsonToAvro(SeasonSchema, seasonJson)
     }).not.toThrow()
   })
 
@@ -76,7 +76,7 @@ describe('JSON to avro conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
     }
     expect(() => {
-      JSONToAvro(SeasonSchema, seasonJson)
+      jsonToAvro(SeasonSchema, seasonJson)
     }).toThrow()
   })
 
@@ -143,7 +143,7 @@ describe('JSON to avro conversion tests', () => {
     }).not.toThrow()
   })
 
-  test(JSONToAvroToJSON(1), () => {
+  test(jsonToAvroToJSON(1), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -172,7 +172,7 @@ describe('JSON to avro conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const avroHighlight = JSONToAvro(HighlightSchema, hl)
+    const avroHighlight = jsonToAvro(HighlightSchema, hl)
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
@@ -212,7 +212,7 @@ describe('JSON to avro conversion tests', () => {
     })
   })
 
-  test(JSONToAvroToJSON(2), () => {
+  test(jsonToAvroToJSON(2), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -235,7 +235,7 @@ describe('JSON to avro conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const avroHighlight = JSONToAvro(HighlightSchema, hl)
+    const avroHighlight = jsonToAvro(HighlightSchema, hl)
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
@@ -268,7 +268,7 @@ describe('JSON to avro conversion tests', () => {
     })
   })
 
-  test(JSONToAvroToJSON(3), () => {
+  test(jsonToAvroToJSON(3), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -282,7 +282,7 @@ describe('JSON to avro conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
     }
-    const avroHighlight = JSONToAvro(HighlightSchema, hl)
+    const avroHighlight = jsonToAvro(HighlightSchema, hl)
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
@@ -305,7 +305,7 @@ describe('JSON to avro conversion tests', () => {
     })
   })
 
-  test(JSONToAvroToJSON(4), () => {
+  test(jsonToAvroToJSON(4), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -339,7 +339,7 @@ describe('JSON to avro conversion tests', () => {
       createdAt: 1550843428551,
     }
 
-    const avroHighlight = JSONToAvro(HighlightSchema, hl)
+    const avroHighlight = jsonToAvro(HighlightSchema, hl)
 
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
@@ -385,7 +385,7 @@ describe('JSON to avro conversion tests', () => {
     })
   })
 
-  test(JSONToAvroToJSON(5), () => {
+  test(jsonToAvroToJSON(5), () => {
     const hl = {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
       event: {
@@ -433,7 +433,7 @@ describe('JSON to avro conversion tests', () => {
       createdAt: 1550843428551,
     }
 
-    const avroHighlight = JSONToAvro(HighlightSchema, hl)
+    const avroHighlight = jsonToAvro(HighlightSchema, hl)
 
     expect(avroHighlight).toEqual({
       createdAt: 1550843428551,
@@ -494,7 +494,7 @@ describe('JSON to avro conversion tests', () => {
     })
   })
 
-  test(JSONToAvroToJSON(6), () => {
+  test(jsonToAvroToJSON(6), () => {
     const seasonJson = {
       competitionId: '123',
       crazyfield: 'crazy',
@@ -512,7 +512,7 @@ describe('JSON to avro conversion tests', () => {
       teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
     }
-    const avroSeason = JSONToAvro(SeasonSchema, seasonJson)
+    const avroSeason = jsonToAvro(SeasonSchema, seasonJson)
     expect(avroSeason).toEqual({
       competitionId: '123',
       couldBeANumber: null,
@@ -539,7 +539,7 @@ describe('JSON to avro conversion tests', () => {
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
     })
   })
-  test(JSONToAvroToJSON(7), () => {
+  test(jsonToAvroToJSON(7), () => {
     const seasonJson = {
       competitionId: '123',
       crazyfield: 'crazy',
@@ -558,7 +558,7 @@ describe('JSON to avro conversion tests', () => {
       teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
     }
-    const avroSeason = JSONToAvro(SeasonSchema, seasonJson)
+    const avroSeason = jsonToAvro(SeasonSchema, seasonJson)
     expect(avroSeason).toEqual({
       competitionId: '123',
       couldBeANumber: {
@@ -585,6 +585,84 @@ describe('JSON to avro conversion tests', () => {
       numberOfParticipants: 12315,
       teams: ['cjsg44vyf0004cr88qro9k8mv', 'cjsg44vyf0005cr88k2b7b9pc'],
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+    })
+  })
+
+  test(jsonToAvroToJSON(8), () => {
+    const hl = {
+      _id: 'cjsg44vwp0001cr88mfe3kkep',
+      event: {
+        id: 'cjsg44vst0000cr88768nlnfz',
+      },
+      annotations: [
+        {
+          id: 'cjsg44vxp0002cr88iuh3ymff',
+          elapsedTime: 10,
+          type: 'goal',
+          team: 'home',
+          actions: [
+            {
+              __type: 'UiTimerVisibilityAction',
+              visible: true,
+            },
+            {
+              __type: 'UiScoreboardVisibilityAction',
+              visible: true,
+            },
+          ],
+          createdAt: 1550843428526,
+        },
+      ],
+      video: { position: 10, duration: 500 },
+      primaryAnnotationId: 'cjsg44vxp0002cr88iuh3ymff',
+      deleted: false,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+      createdAt: 1550843428551,
+    }
+
+    const avroHighlight = jsonToAvro(HighlightSchema, hl)
+
+    expect(avroHighlight).toEqual({
+      createdAt: 1550843428551,
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      deleted: false,
+      primaryAnnotationId: {
+        string: 'cjsg44vxp0002cr88iuh3ymff',
+      },
+      video: {
+        HighlightVideoRecord: {
+          imageUrl: null,
+          videoUrl: null,
+          duration: 500,
+          position: 10,
+        },
+      },
+      annotations: [
+        {
+          createdAt: 1550843428526,
+          actions: [
+            {
+              UiTimerVisibilityAction: {
+                visible: true,
+              },
+            },
+            {
+              UiScoreboardVisibilityAction: {
+                visible: true,
+              },
+            },
+          ],
+          personId: null,
+          team: { TeamEnum: 'home' },
+          type: { FootballAnnotationTypeEnum: 'goal' },
+          elapsedTime: 10,
+          id: 'cjsg44vxp0002cr88iuh3ymff',
+        },
+      ],
+      event: { id: 'cjsg44vst0000cr88768nlnfz' },
+      _id: 'cjsg44vwp0001cr88mfe3kkep',
     })
   })
 })

@@ -26,7 +26,7 @@ function checkRecord(schema, record) {
     )
 }
 
-function avroToJSON(schema, record) {
+function avroToJson(schema, record) {
   checkRecord(schema, record)
   return processRecord(record, schema)
 }
@@ -129,7 +129,7 @@ function processArrayType(field, types) {
 }
 
 module.exports = {
-  avroToJSON,
+  avroToJson,
   checkRecord,
   processRecord,
   processField,
