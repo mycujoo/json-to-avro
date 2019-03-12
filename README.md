@@ -3,7 +3,7 @@
 TODO:
 Implement configure the key that is used to set and detect custom union multi record typed types.
 
-## JSONToAvro
+## Json to avro
 
 To convert plain JSON to avro-serializable JSON, supply the avro schema in JSON format e.g:
 
@@ -50,7 +50,7 @@ const avroRecord = jsonToAvro(AvroSchema, JSONRecord)
 //   id: 'abc1q24',
 // }
 ```
-## AvroToJSON
+## Avro to json
 
 And vice versa.
 
