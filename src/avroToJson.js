@@ -3,7 +3,7 @@
 const _ = require('lodash')
 
 const { isValid } = require('./utils')
-
+const { jsonToAvro } = require('./jsonToAvro')
 const baseTypeConversions = {
   string: value => {
     return value
@@ -27,8 +27,9 @@ function checkRecord(schema, record) {
 }
 
 function avroToJson(schema, record) {
-  checkRecord(schema, record)
-  return processRecord(record, schema)
+  const jsonDoc = processRecord(record, schema)
+  checkRecord(schema, jsonToAvro(schema, jsonDoc))
+  return jsonDoc
 }
 
 function processRecord(record, schema) {
