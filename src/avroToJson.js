@@ -117,7 +117,8 @@ function processArrayType(field, types) {
 
   const results = _.compact(
     _.map(nonNullTypes, type => {
-      if (type.type === 'enum') return field[type.name]
+      if (type.type === 'enum')
+        return field[type.name] !== undefined ? field[type.name] : field
 
       if (typeof type === 'object' && type.type && type.type === 'record')
         return processRecord(field[type.name], type)
