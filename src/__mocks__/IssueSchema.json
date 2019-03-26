@@ -1,0 +1,120 @@
+{
+  "type": "record",
+  "name": "Issue",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "doc": "ID of the issue"
+    },
+    {
+      "name": "deleted",
+      "type": "boolean",
+      "doc": "Soft delete of the issue"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "doc": "Title of the issue"
+    },
+    {
+      "name": "slackName",
+      "type": "string",
+      "doc": "Slack name of the issue creator"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "doc": "Description of the issue"
+    },
+    {
+      "name": "creatorUserId",
+      "type": "string",
+      "doc": "User ID of the creator of the issue"
+    },
+    {
+      "name": "updaterUserId",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "User ID of the person who was the last person to update the issue"
+    },
+    {
+      "name": "browser",
+      "type": [
+        "null",
+        {
+          "type": "enum",
+          "name": "Browser",
+          "symbols": [
+            "chrome",
+            "safari",
+            "firefox",
+            "edge",
+            "ios",
+            "android",
+            "explorer"
+          ],
+          "doc": "Browser that was used while encountering the issue"
+        }
+      ]
+    },
+    {
+      "name": "severity",
+      "type": {
+        "type": "enum",
+        "name": "IssueSeverityLevel",
+        "symbols": [
+          "severity1",
+          "severity2",
+          "severity3",
+          "severity4",
+          "severity5"
+        ],
+        "doc": "Severity level of the issue, severity1 being the lowest option severity5 being the highest severity"
+      }
+    },
+    {
+      "name": "status",
+      "type": {
+        "type": "enum",
+        "name": "IssueStatus",
+        "symbols": [
+          "open",
+          "acknowledged",
+          "resolved",
+          "closed"
+        ],
+        "doc": "Status of the issue"
+      }
+    },
+    {
+      "name": "itemId",
+      "type": "string",
+      "doc": "ID of the item of the issue"
+    },
+    {
+      "name": "updatedAt",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "Latest time at which the issue has been updated"
+    },
+    {
+      "name": "createdAt",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "Time at which the issue has been created"
+    },
+    {
+      "name": "eventId",
+      "type": "string",
+      "doc": "Unique ID for the Kafka event"
+    },
+    {
+      "name": "traceToken",
+      "type": "string",
+      "doc": "Trace token for this request, coming from upstream service"
+    }
+  ]
+}

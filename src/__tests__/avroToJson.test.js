@@ -4,6 +4,7 @@ const { avroToJson } = require('../../')
 const { checkRecord } = require('../avroToJson')
 const SeasonSchema = require('../__mocks__/SeasonSchema.json')
 const HighlightSchema = require('../__mocks__/HighlightSchema.json')
+const IssueSchema = require('../__mocks__/IssueSchema.json')
 
 function avroToJsonToavro(nr) {
   return `It should convert an avro doc to JSON #${nr}`
@@ -207,6 +208,42 @@ describe('Avro to JSON conversion tests', () => {
       eventId: 'cjsg44vyf0004cr88qro9k8mv',
       traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
       createdAt: 1550843428551,
+    })
+  })
+  test(avroToJsonToavro(4), () => {
+    const AvroIssue = {
+      id: '5c9a4245f91d660a072e2aa8',
+      deleted: false,
+      title: 'Klaagzang',
+      slackName: 'joeri',
+      description: 'Alles gaat naar de klere in de land!',
+      creatorUserId: 'joeri',
+      updaterUserId: null,
+      browser: 'chrome',
+      severity: 'severity1',
+      status: 'open',
+      itemId: '5c9a4218f91d660a072e2aa7',
+      updatedAt: 1553613381456,
+      createdAt: 1235123140,
+      eventId: 'cjtpxalao0003zb88c2yu8ul6',
+      traceToken: '',
+    }
+    const convertedIssue = avroToJson(IssueSchema, AvroIssue)
+    expect(convertedIssue).toEqual({
+      traceToken: '',
+      eventId: 'cjtpxalao0003zb88c2yu8ul6',
+      createdAt: 1235123140,
+      updatedAt: 1553613381456,
+      itemId: '5c9a4218f91d660a072e2aa7',
+      status: 'open',
+      severity: 'severity1',
+      browser: 'chrome',
+      creatorUserId: 'joeri',
+      description: 'Alles gaat naar de klere in de land!',
+      slackName: 'joeri',
+      title: 'Klaagzang',
+      deleted: false,
+      id: '5c9a4245f91d660a072e2aa8',
     })
   })
 })
