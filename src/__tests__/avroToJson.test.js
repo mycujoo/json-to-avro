@@ -246,4 +246,92 @@ describe('Avro to JSON conversion tests', () => {
       id: '5c9a4245f91d660a072e2aa8',
     })
   })
+
+  test(avroToJsonToavro(5), () => {
+    const AvroHighlight = {
+      _id: 'cjsg4927s00001beega95jysq',
+      event: { id: 'cjsg490pr002t0k27kzqxi2px' },
+      annotations: [
+        {
+          id: 'cjsg492cx00011beeajz5er4g',
+          elapsedTime: 30,
+          type: { FootballAnnotationTypeEnum: 'startPeriod' },
+          team: null,
+          personId: null,
+          actions: [
+            { TimerChangeAction: { type: 'start', timer: 0 } },
+            { UiScoreboardVisibilityAction: { visible: true } },
+            { UiTimerVisibilityAction: { visible: true } },
+          ],
+          createdAt: 1550843623474,
+        },
+      ],
+      video: null,
+      primaryAnnotationId: { string: 'cjsg492cx00011beeajz5er4g' },
+      deleted: false,
+      eventId: 'cjsg492f400051bee5x2m6fbz',
+      traceToken: 'cjsg492f500061beez0bqxl41',
+      createdAt: 1550843623553,
+    }
+    const convertedIssue = avroToJson(HighlightSchema, AvroHighlight, {
+      wrapUnions: false,
+    })
+    expect(convertedIssue).toEqual({
+      _id: 'cjsg4927s00001beega95jysq',
+      event: { id: 'cjsg490pr002t0k27kzqxi2px' },
+      annotations: [
+        {
+          id: 'cjsg492cx00011beeajz5er4g',
+          elapsedTime: 30,
+          type: 'startPeriod',
+          actions: [
+            {
+              __type: 'TimerChangeAction',
+              type: 'start',
+              timer: 0,
+            },
+            { __type: 'UiScoreboardVisibilityAction', visible: true },
+            { __type: 'UiTimerVisibilityAction', visible: true },
+          ],
+          createdAt: 1550843623474,
+        },
+      ],
+      primaryAnnotationId: 'cjsg492cx00011beeajz5er4g',
+      deleted: false,
+      eventId: 'cjsg492f400051bee5x2m6fbz',
+      traceToken: 'cjsg492f500061beez0bqxl41',
+      createdAt: 1550843623553,
+    })
+  })
+
+  test(avroToJsonToavro(6), () => {
+    const AvroHighlight = {
+      _id: 'cjsg4927s00001beega95jysq',
+      event: { id: 'cjsg490pr002t0k27kzqxi2px' },
+      annotations: [
+        {
+          id: 'cjsg492cx00011beeajz5er4g',
+          elapsedTime: 30,
+          type: { FootballAnnotationTypeEnum: 'startPeriod' },
+          team: null,
+          personId: null,
+          actions: [
+            { TimerChangeAction: { type: 'start', timer: 0 } },
+            { UiScoreboardVisibilityAction: { visible: true } },
+            { UiTimerVisibilityAction: { visible: true } },
+          ],
+          createdAt: 1550843623474,
+        },
+      ],
+      video: null,
+      primaryAnnotationId: { string: 123 },
+      deleted: false,
+      eventId: 'cjsg492f400051bee5x2m6fbz',
+      traceToken: 'cjsg492f500061beez0bqxl41',
+      createdAt: 1550843623553,
+    }
+    expect(() => {
+      avroToJson(HighlightSchema, AvroHighlight)
+    }).toThrow()
+  })
 })
