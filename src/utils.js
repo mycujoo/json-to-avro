@@ -1,12 +1,13 @@
 'use strict'
 
+const _ = require('lodash')
 const avsc = require('avsc')
 const debug = require('debug')('json-to-avro:utils')
 
 function isValid(schema, avro, avroParseOptions = { wrapUnions: true }) {
   let isValid = false
   try {
-    const SchemaType = avsc.parse(schema, avroParseOptions)
+    const SchemaType = avsc.parse(schema, _.clone(avroParseOptions))
     isValid = SchemaType.isValid(avro)
   } catch (error) {
     if (

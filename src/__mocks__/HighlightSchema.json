@@ -1,7 +1,6 @@
 {
-  "type": "record",
   "name": "highlight_v1",
-  "doc": "Highlighted moment for live events",
+  "type": "record",
   "fields": [
     {
       "name": "_id",
@@ -10,29 +9,27 @@
     },
     {
       "name": "event",
-      "doc": "The match/event the highlight belongs to",
       "type": {
-        "type": "record",
         "name": "highlightEvent",
-        "doc": "The match/event the highlight belongs to",
+        "type": "record",
         "fields": [
           {
             "name": "id",
             "type": "string",
             "doc": "ID of the event where the highlight belongs to"
           }
-        ]
-      }
+        ],
+        "doc": "The match/event the highlight belongs to"
+      },
+      "doc": "The match/event the highlight belongs to"
     },
     {
       "name": "annotations",
-      "doc": "List of annotations of the highlight",
       "type": {
         "type": "array",
         "items": {
           "name": "Annotation",
           "type": "record",
-          "doc": "Annotation information",
           "fields": [
             {
               "name": "id",
@@ -46,7 +43,6 @@
             },
             {
               "name": "type",
-              "doc": "Annotation Type",
               "type": [
                 "null",
                 {
@@ -69,15 +65,16 @@
                     "skill"
                   ]
                 }
-              ]
+              ],
+              "doc": "Annotation Type"
             },
             {
               "name": "team",
               "type": [
                 "null",
                 {
-                  "type": "enum",
                   "name": "TeamEnum",
+                  "type": "enum",
                   "symbols": ["home", "away"]
                 }
               ],
@@ -85,123 +82,122 @@
             },
             {
               "name": "personId",
-              "doc": "The person which the annotation belongs to",
-              "type": ["null", "string"]
+              "type": ["null", "string"],
+              "doc": "The person which the annotation belongs to"
             },
             {
               "name": "actions",
-              "doc": "List of actions to be executed for this annotation",
               "type": {
                 "type": "array",
                 "items": [
                   {
                     "name": "PlayerChangeAction",
                     "type": "record",
-                    "doc": "action for changing player",
                     "fields": [
                       {
                         "name": "type",
-                        "doc": "The type of the player change",
                         "type": {
                           "name": "PlayerChangeTypeEnum",
                           "type": "enum",
                           "symbols": ["removed", "added"]
-                        }
+                        },
+                        "doc": "The type of the player change"
                       },
                       {
                         "name": "personId",
                         "type": "string",
                         "doc": "ID of the person related to the action"
                       }
-                    ]
+                    ],
+                    "doc": "action for changing player"
                   },
                   {
                     "name": "ScoreChangeAction",
                     "type": "record",
-                    "doc": "action for changing score",
                     "fields": [
                       {
                         "name": "type",
-                        "doc": "The type of the score change",
                         "type": {
                           "name": "ScoreChangeTypeEnum",
                           "type": "enum",
                           "symbols": ["increased", "decreased"]
-                        }
+                        },
+                        "doc": "The type of the score change"
                       },
                       {
                         "name": "team",
                         "type": "TeamEnum"
                       }
-                    ]
+                    ],
+                    "doc": "action for changing score"
                   },
                   {
                     "name": "TimerChangeAction",
                     "type": "record",
-                    "doc": "action for changing timer status and value",
                     "fields": [
                       {
                         "name": "type",
-                        "doc": "The type of the change",
                         "type": {
                           "name": "TimerChangeTypeEnum",
                           "type": "enum",
                           "symbols": ["start", "stop", "update"]
-                        }
+                        },
+                        "doc": "The type of the change"
                       },
                       {
                         "name": "timer",
-                        "doc": "The clock/timer position of the match in seconds",
-                        "type": "int"
+                        "type": "int",
+                        "doc": "The clock/timer position of the match in seconds"
                       }
-                    ]
+                    ],
+                    "doc": "action for changing timer status and value"
                   },
                   {
                     "name": "UiScoreboardVisibilityAction",
                     "type": "record",
-                    "doc": "action for changing Scoreboard visibility",
                     "fields": [
                       {
                         "name": "visible",
-                        "doc": "Defines the visibility status for scoreboard",
-                        "type": "boolean"
+                        "type": "boolean",
+                        "doc": "Defines the visibility status for scoreboard"
                       }
-                    ]
+                    ],
+                    "doc": "action for changing Scoreboard visibility"
                   },
                   {
                     "name": "UiTimerVisibilityAction",
                     "type": "record",
-                    "doc": "action for changing Timer visibility",
                     "fields": [
                       {
                         "name": "visible",
-                        "doc": "Defines the visibility status for timer",
-                        "type": "boolean"
+                        "type": "boolean",
+                        "doc": "Defines the visibility status for timer"
                       }
-                    ]
+                    ],
+                    "doc": "action for changing Timer visibility"
                   }
                 ]
-              }
+              },
+              "doc": "List of actions to be executed for this annotation"
             },
             {
               "name": "createdAt",
               "type": "long",
-              "doc": "The moment this annotation was included in the highlight",
-              "logicalType": "timestamp-millis"
+              "doc": "The moment this annotation was included in the highlight"
             }
-          ]
+          ],
+          "doc": "Annotation information"
         }
-      }
+      },
+      "doc": "List of annotations of the highlight"
     },
     {
       "name": "video",
-      "doc": "Video information of the highlight",
       "type": [
         "null",
         {
           "name": "HighlightVideoRecord",
           "type": "record",
-          "doc": "record of the video related to the highlight",
           "fields": [
             {
               "name": "position",
@@ -223,14 +219,16 @@
               "type": ["null", "string"],
               "doc": "absolute url from the thumbnail of the highlight"
             }
-          ]
+          ],
+          "doc": "record of the video related to the highlight"
         }
-      ]
+      ],
+      "doc": "Video information of the highlight"
     },
     {
       "name": "primaryAnnotationId",
-      "doc": "Id of the main annotation",
-      "type": ["null", "string"]
+      "type": ["null", "string"],
+      "doc": "Id of the main annotation"
     },
     {
       "name": "deleted",
@@ -250,8 +248,8 @@
     {
       "name": "createdAt",
       "type": "long",
-      "doc": "Time when request was processed by the service",
-      "logicalType": "timestamp-millis"
+      "doc": "Time when request was processed by the service"
     }
-  ]
+  ],
+  "doc": "Highlighted moment for live events"
 }
