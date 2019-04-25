@@ -46,7 +46,7 @@
             },
             {
               "name": "type",
-              "doc": "Annotation type",
+              "doc": "Annotation Type",
               "type": [
                 "null",
                 {
@@ -78,10 +78,7 @@
                 {
                   "type": "enum",
                   "name": "TeamEnum",
-                  "symbols": [
-                    "home",
-                    "away"
-                  ]
+                  "symbols": ["home", "away"]
                 }
               ],
               "doc": "The team which the annotation belongs to"
@@ -89,10 +86,7 @@
             {
               "name": "personId",
               "doc": "The person which the annotation belongs to",
-              "type": [
-                "null",
-                "string"
-              ]
+              "type": ["null", "string"]
             },
             {
               "name": "actions",
@@ -111,10 +105,7 @@
                         "type": {
                           "name": "PlayerChangeTypeEnum",
                           "type": "enum",
-                          "symbols": [
-                            "removed",
-                            "added"
-                          ]
+                          "symbols": ["removed", "added"]
                         }
                       },
                       {
@@ -135,10 +126,7 @@
                         "type": {
                           "name": "ScoreChangeTypeEnum",
                           "type": "enum",
-                          "symbols": [
-                            "increased",
-                            "decreased"
-                          ]
+                          "symbols": ["increased", "decreased"]
                         }
                       },
                       {
@@ -158,11 +146,7 @@
                         "type": {
                           "name": "TimerChangeTypeEnum",
                           "type": "enum",
-                          "symbols": [
-                            "start",
-                            "stop",
-                            "update"
-                          ]
+                          "symbols": ["start", "stop", "update"]
                         }
                       },
                       {
@@ -231,18 +215,12 @@
             },
             {
               "name": "videoUrl",
-              "type": [
-                "null",
-                "string"
-              ],
+              "type": ["null", "string"],
               "doc": "url of the m3u8 of the highlight"
             },
             {
               "name": "imageUrl",
-              "type": [
-                "null",
-                "string"
-              ],
+              "type": ["null", "string"],
               "doc": "absolute url from the thumbnail of the highlight"
             }
           ]
@@ -252,10 +230,7 @@
     {
       "name": "primaryAnnotationId",
       "doc": "Id of the main annotation",
-      "type": [
-        "null",
-        "string"
-      ]
+      "type": ["null", "string"]
     },
     {
       "name": "deleted",
