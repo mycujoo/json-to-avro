@@ -1,6 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
+const debug = require('debug')('json-to-avro:avroToJson')
 
 const { isValid } = require('./utils')
 const { jsonToAvro } = require('./jsonToAvro')
@@ -20,6 +21,9 @@ const baseTypeConversions = {
 }
 
 function checkRecord(schema, record, avroParseOptions) {
+  debug('checkRecord schema', JSON.stringify(schema))
+  debug('checkRecord record', JSON.stringify(record))
+  debug('checkRecord avroParseOptions', JSON.stringify(avroParseOptions))
   if (!isValid(schema, record, avroParseOptions))
     throw new Error(
       'The record that you passed in isnt valid according to the avro schema you passed in.',
