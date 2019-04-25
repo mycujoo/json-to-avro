@@ -23,18 +23,18 @@ const baseTypeConversions = {
   },
 }
 
-function checkRecord(schema, record) {
-  if (!isValid(schema, record)) {
+function checkRecord(schema, record, avroParseOptions) {
+  if (!isValid(schema, record, avroParseOptions)) {
     throw new Error(
       'The record that was generated isnt valid according to the avro schema you passed in!',
     )
   }
 }
 
-function jsonToAvro(schema, json) {
+function jsonToAvro(schema, json, avroParseOptions) {
   const processedRecord = processRecord(json, schema)
   const record = processedRecord[schema.name]
-  checkRecord(schema, record)
+  checkRecord(schema, record, avroParseOptions)
   return record
 }
 

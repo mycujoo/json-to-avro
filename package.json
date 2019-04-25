@@ -81,6 +81,7 @@
   },
   "dependencies": {
     "avsc": "^5.4.7",
+    "debug": "^4.1.1",
     "lodash": "^4.17.11"
   }
 }
