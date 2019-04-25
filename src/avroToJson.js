@@ -21,9 +21,9 @@ const baseTypeConversions = {
 }
 
 function checkRecord(schema, record, avroParseOptions) {
+  debug('checkRecord avroParseOptions', avroParseOptions)
   debug('checkRecord schema', JSON.stringify(schema))
   debug('checkRecord record', JSON.stringify(record))
-  debug('checkRecord avroParseOptions', JSON.stringify(avroParseOptions))
   if (!isValid(schema, record, avroParseOptions))
     throw new Error(
       'The record that you passed in isnt valid according to the avro schema you passed in.',
@@ -32,11 +32,11 @@ function checkRecord(schema, record, avroParseOptions) {
 
 function avroToJson(schema, record, avroParseOptions) {
   const jsonDoc = processRecord(record, schema)
-  record =
-    avroParseOptions && !avroParseOptions.wrapUnions
-      ? jsonDoc
-      : jsonToAvro(schema, jsonDoc)
-  checkRecord(schema, record, avroParseOptions)
+  checkRecord(
+    schema,
+    jsonToAvro(schema, jsonDoc, avroParseOptions),
+    avroParseOptions,
+  )
   return jsonDoc
 }
 
