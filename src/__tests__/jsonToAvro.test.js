@@ -665,4 +665,66 @@ describe('JSON to avro conversion tests', () => {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
     })
   })
+
+  test(jsonToAvroToJSON(9), () => {
+    const hl = {
+      _id: 'cjsg44vwp0001cr88mfe3kkep',
+      event: {
+        id: 'cjsg44vst0000cr88768nlnfz',
+      },
+      annotations: [
+        {
+          id: 'cjsg44vxp0002cr88iuh3ymff',
+          elapsedTime: 10,
+          type: 'goal',
+          team: 'home',
+          actions: [
+            {
+              __type: 'ScoreChangeAction',
+              type: 'increased',
+              team: 'home',
+            },
+          ],
+          createdAt: 1550843428526,
+        },
+      ],
+      video: null,
+      primaryAnnotationId: 'cjsg44vxp0002cr88iuh3ymff',
+      deleted: false,
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+      createdAt: 1550843428551,
+    }
+    const avroHighlight = jsonToAvro(HighlightSchema, hl)
+    expect(avroHighlight).toEqual({
+      createdAt: 1550843428551,
+      traceToken: 'cjsg44vyf0005cr88k2b7b9pc',
+      eventId: 'cjsg44vyf0004cr88qro9k8mv',
+      deleted: false,
+      primaryAnnotationId: {
+        string: 'cjsg44vxp0002cr88iuh3ymff',
+      },
+      video: null,
+      annotations: [
+        {
+          createdAt: 1550843428526,
+          actions: [
+            {
+              ScoreChangeAction: {
+                team: 'home',
+                type: 'increased',
+              },
+            },
+          ],
+          personId: null,
+          team: { TeamEnum: 'home' },
+          type: { FootballAnnotationTypeEnum: 'goal' },
+          elapsedTime: 10,
+          id: 'cjsg44vxp0002cr88iuh3ymff',
+        },
+      ],
+      event: { id: 'cjsg44vst0000cr88768nlnfz' },
+      _id: 'cjsg44vwp0001cr88mfe3kkep',
+    })
+  })
 })

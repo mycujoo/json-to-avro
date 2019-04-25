@@ -39,6 +39,8 @@ function jsonToAvro(schema, json) {
 }
 
 function processRecord(json, { name, fields }) {
+  if (!json) return
+
   const processedRecord = {}
 
   processedRecord[name] = _.reduce(
