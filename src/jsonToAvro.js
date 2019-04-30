@@ -17,6 +17,10 @@ const baseTypeConversions = {
     if (typeof value !== 'number') return
     return value
   },
+  double: value => {
+    if (typeof value !== 'number') return
+    return value
+  },
   int: value => {
     if (typeof value !== 'number') return
     return value
@@ -124,6 +128,7 @@ function processArrayType(json, types, name) {
         } catch (error) {}
       } else {
         if (type.type === 'enum') {
+          if (_.isNil(json)) return
           processedArrayType[type.name] = json
           return processedArrayType
         }

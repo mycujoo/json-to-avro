@@ -15,6 +15,9 @@ const baseTypeConversions = {
   long: value => {
     return value
   },
+  double: value => {
+    return value
+  },
   int: value => {
     return value
   },

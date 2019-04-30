@@ -727,4 +727,28 @@ describe('JSON to avro conversion tests', () => {
       _id: 'cjsg44vwp0001cr88mfe3kkep',
     })
   })
+  test(jsonToAvroToJSON(10), () => {
+    const profile = require('../__mocks__/Profile.json')
+    const profileSchema = require('../__mocks__/ProfileSchema.json')
+    const avroP = jsonToAvro(profileSchema, profile)
+    expect(avroP).toEqual({
+      createdAt: 1550160811002,
+      traceToken: '925f6000-0570-43fb-b99a-05cc3e9960ba',
+      eventId: '3a6d7ac3-b3cb-417d-be2b-6b5c8d6825b3',
+      profileImageURL: null,
+      shirtNumber: null,
+      weight: null,
+      height: null,
+      position: null,
+      preferredFoot: null,
+      gender: null,
+      countryCode: null,
+      birthdate: null,
+      lastName: { string: 'Carvalho' },
+      firstName: { string: 'Fábio' },
+      personId: { string: 'cjs4nopz8000e0jbp7frkjuz7' },
+      userId: { string: '110186' },
+      id: '7ba19a4f-c44d-4363-844f-20c8ab7d0311',
+    })
+  })
 })
