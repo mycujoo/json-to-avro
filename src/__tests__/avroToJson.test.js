@@ -304,37 +304,6 @@ describe('Avro to JSON conversion tests', () => {
     })
   })
 
-  test(avroToJsonToavro(6), () => {
-    const AvroHighlight = {
-      _id: 'cjsg4927s00001beega95jysq',
-      event: { id: 'cjsg490pr002t0k27kzqxi2px' },
-      annotations: [
-        {
-          id: 'cjsg492cx00011beeajz5er4g',
-          elapsedTime: 30,
-          type: { FootballAnnotationTypeEnum: 'startPeriod' },
-          team: null,
-          personId: null,
-          actions: [
-            { TimerChangeAction: { type: 'start', timer: 0 } },
-            { UiScoreboardVisibilityAction: { visible: true } },
-            { UiTimerVisibilityAction: { visible: true } },
-          ],
-          createdAt: 1550843623474,
-        },
-      ],
-      video: null,
-      primaryAnnotationId: { string: 123 },
-      deleted: false,
-      eventId: 'cjsg492f400051bee5x2m6fbz',
-      traceToken: 'cjsg492f500061beez0bqxl41',
-      createdAt: 1550843623553,
-    }
-    expect(() => {
-      avroToJson(HighlightSchema, AvroHighlight)
-    }).toThrow()
-  })
-
   test('checkRecord', () => {
     const record = {
       createdAt: 1556202751238,

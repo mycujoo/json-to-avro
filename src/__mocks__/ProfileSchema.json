@@ -1,0 +1,137 @@
+{
+  "type": "record",
+  "name": "playerProfile_v3",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "doc": "Profile's Id"
+    },
+    {
+      "name": "userId",
+      "type": ["string", "null"],
+      "doc": "Mycujoo User Id"
+    },
+    {
+      "name": "personId",
+      "type": ["string", "null"],
+      "doc": "Player Person's ID"
+    },
+    {
+      "name": "firstName",
+      "type": ["string", "null"],
+      "doc": "First name of the player"
+    },
+    {
+      "name": "lastName",
+      "type": ["string", "null"],
+      "doc": "Last name of the player"
+    },
+    {
+      "name": "birthdate",
+      "type": [
+        "null",
+        {
+          "type": "long",
+          "logicalType": "date"
+        }
+      ],
+      "doc": "The birthdate of the person"
+    },
+    {
+      "name": "countryCode",
+      "type": ["string", "null"],
+      "doc": "Player's country code"
+    },
+    {
+      "name": "gender",
+      "type": [
+        "null",
+        {
+          "type": "enum",
+          "name": "profileGenders",
+          "symbols": ["male", "female", "notSpecified"]
+        }
+      ],
+      "doc": "The gender of the Player"
+    },
+    {
+      "name": "preferredFoot",
+      "type": [
+        "null",
+        {
+          "type": "enum",
+          "name": "playerFeet",
+          "symbols": ["right", "left", "both"]
+        }
+      ],
+      "doc": "The Player's preferred foot"
+    },
+    {
+      "name": "position",
+      "type": [
+        "null",
+        {
+          "type": "enum",
+          "name": "playerPosition",
+          "symbols": [
+            "GK",
+            "LB",
+            "RB",
+            "CB",
+            "LWB",
+            "RWB",
+            "CDM",
+            "CM",
+            "CAM",
+            "RM",
+            "LM",
+            "RW",
+            "LW",
+            "RF",
+            "LF",
+            "SS",
+            "ST"
+          ]
+        }
+      ],
+      "doc": "Player's position"
+    },
+    {
+      "name": "height",
+      "type": ["double", "null"],
+      "doc": "Player's Height in centimeters (cm)"
+    },
+    {
+      "name": "weight",
+      "type": ["double", "null"],
+      "doc": "Player's Weight in Kilograms (kg)"
+    },
+    {
+      "name": "shirtNumber",
+      "type": ["string", "null"],
+      "doc": "Player's number"
+    },
+    {
+      "name": "profileImageURL",
+      "type": ["string", "null"],
+      "doc": "Player's image full URL"
+    },
+    {
+      "name": "eventId",
+      "type": "string",
+      "doc": "Unique ID for the Kafka event"
+    },
+    {
+      "name": "traceToken",
+      "type": "string",
+      "doc": "Trace token for this request, coming from upstream service"
+    },
+    {
+      "name": "createdAt",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "Time when request was processed by the service"
+    }
+  ]
+}
