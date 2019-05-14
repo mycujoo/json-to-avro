@@ -1,5 +1,6 @@
 'use strict'
 
+const _ = require('lodash')
 const { avroToJson } = require('../../')
 const { checkRecord } = require('../avroToJson')
 const SeasonSchema = require('../__mocks__/SeasonSchema.json')
@@ -577,5 +578,20 @@ describe('Avro to JSON conversion tests', () => {
     }
     const options = { wrapUnions: false }
     checkRecord(schema, record, options)
+  })
+  test(avroToJsonToavro(6), () => {
+    const profile = require('../__mocks__/Profile.json')
+    const profileSchema = require('../__mocks__/ProfileSchema.json')
+    const jsonP = avroToJson(profileSchema, {
+      createdAt: 1550160811002,
+      traceToken: '925f6000-0570-43fb-b99a-05cc3e9960ba',
+      eventId: '3a6d7ac3-b3cb-417d-be2b-6b5c8d6825b3',
+      lastName: { string: 'Carvalho' },
+      firstName: { string: 'Fábio' },
+      personId: { string: 'cjs4nopz8000e0jbp7frkjuz7' },
+      userId: { string: '110186' },
+      id: '7ba19a4f-c44d-4363-844f-20c8ab7d0311',
+    })
+    expect(jsonP).toEqual(_.omitBy(profile, _.isNil))
   })
 })
